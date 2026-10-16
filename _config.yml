@@ -1,6 +1,13 @@
 # GitHub Pages builds this site with Jekyll (Settings > Pages > Deploy from
 # a branch: main, / (root)). Nothing to install or run locally.
 title: CLeARINET
+
+# The site lives at markspowell.github.io/clearinet-site/ until it has its own
+# domain. When the custom domain is set up, change this to: baseurl: ""
+baseurl: /clearinet-site
+
+# Pages at /download/, /guide/ and /about/ rather than /download.html.
+permalink: pretty
 description: An open source HTTP(S) inspection tool, a successor to Fiddler Classic. Free for any use, under the MIT licence.
 repository_url: https://github.com/MarkSPowell/CLeARINET
 releases_url: https://github.com/MarkSPowell/CLeARINET/releases
