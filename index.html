@@ -1,0 +1,133 @@
+---
+layout: default
+title: CLeARINET
+description: CLeARINET is a free, open source HTTP(S) debugging proxy for Windows and macOS. Capture, inspect, change and replay web traffic. A successor to Fiddler Classic, MIT licensed.
+---
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Open source · MIT licence · Preview</span>
+      <h1>See inside your <span class="accent">HTTP and HTTPS</span> traffic.</h1>
+      <p class="lede">CLeARINET is a debugging proxy for Windows and macOS. Capture the requests your browsers and apps make, read them, change them, and send them again. It picks up where Fiddler Classic left off, and it's free for any use.</p>
+      <div class="buttons">
+        <a class="button primary" href="{{ '/download/' | relative_url }}">Download</a>
+        <a class="button" href="{{ '/guide/' | relative_url }}">Read the User Guide</a>
+        <a class="button" href="{{ site.repository_url }}">View on GitHub</a>
+      </div>
+      <p class="note">Preview releases for 64-bit Windows 10 and 11, and for macOS 11 or later on Apple silicon (still being tested).</p>
+    </div>
+    <img class="hero-emblem" src="{{ '/assets/emblem.png' | relative_url }}" alt="The CLeARINET emblem: a clarinet inside a magnifying glass, with HTTPS written along it" width="226" height="192">
+  </div>
+
+  <div class="wrap">
+    <figure class="mock" aria-label="Illustration of CLeARINET's session list">
+      <div class="mock-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="mock-scroll">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Status</th><th>Method</th><th>URL</th><th>Resp</th><th>Waterfall</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>41</td><td class="s2">200</td><td>GET</td><td class="url">https://shop.example.com/</td><td>18.2 KB</td><td><div class="wf"><i class="q" style="left:0;width:4px"></i><i class="d" style="left:4px;width:14px"></i><i class="c" style="left:18px;width:16px"></i><i class="t" style="left:34px;width:22px"></i><i class="w" style="left:56px;width:30px"></i><i class="r" style="left:86px;width:10px"></i></div></td></tr>
+            <tr><td>42</td><td class="s2">200</td><td>GET</td><td class="url">https://cdn.example.com/app.3f9c.js</td><td>212 KB</td><td><div class="wf"><i class="q" style="left:96px;width:3px"></i><i class="w" style="left:99px;width:18px"></i><i class="r" style="left:117px;width:44px"></i></div></td></tr>
+            <tr class="selected"><td>43</td><td class="s4">401</td><td>POST</td><td class="url">https://api.example.com/v2/session</td><td>96 B</td><td><div class="wf"><i class="q" style="left:104px;width:3px"></i><i class="w" style="left:107px;width:52px"></i><i class="r" style="left:159px;width:3px"></i></div></td></tr>
+            <tr><td>44</td><td class="s3">302</td><td>GET</td><td class="url">https://login.example.com/authorize?client_id=web</td><td>0 B</td><td><div class="wf"><i class="q" style="left:162px;width:2px"></i><i class="d" style="left:164px;width:8px"></i><i class="c" style="left:172px;width:9px"></i><i class="t" style="left:181px;width:12px"></i><i class="w" style="left:193px;width:9px"></i></div></td></tr>
+            <tr class="found"><td>45</td><td class="s2">200</td><td>POST</td><td class="url">https://api.example.com/v2/session</td><td>1.4 KB</td><td><div class="wf"><i class="q" style="left:200px;width:2px"></i><i class="w" style="left:202px;width:14px"></i><i class="r" style="left:216px;width:3px"></i></div></td></tr>
+            <tr><td>46</td><td class="s2">200</td><td>GET</td><td class="url">https://cdn.example.com/hero.webp</td><td>88.0 KB</td><td><div class="wf"><i class="q" style="left:204px;width:2px"></i><i class="w" style="left:206px;width:6px"></i><i class="r" style="left:212px;width:8px"></i></div></td></tr>
+            <tr><td>47</td><td class="s5">502</td><td>GET</td><td class="url">https://metrics.example.net/collect</td><td>612 B</td><td><div class="wf"><i class="q" style="left:206px;width:2px"></i><i class="d" style="left:208px;width:12px"></i></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </figure>
+    <p class="mock-caption">An illustration of the session list, with the waterfall showing each request's DNS lookup, connection, TLS handshake, wait and download.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Everything you need to debug the web</h2>
+    <p class="intro">Point a browser, an app or a phone at CLeARINET and every request shows up in the list, decrypted and decompressed, ready to read.</p>
+    <div class="cards">
+      <div class="card">
+        <span class="tag">Capture</span>
+        <h3>HTTPS and plain HTTP</h3>
+        <p>Decrypts HTTPS with a root certificate made on your own machine. It becomes the system proxy while it runs, and puts your settings back when it stops.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Inspect</span>
+        <h3>Readable requests and responses</h3>
+        <p>Headers, Raw, JSON, WebForms, images, Hex and Cookies views. Bodies compressed with gzip, deflate, Brotli or zstd are decompressed for you.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Change</span>
+        <h3>Breakpoints and AutoResponder</h3>
+        <p>Pause a request or response, edit it, then let it go on. Or answer requests with your own files, redirects, delays and errors before they reach the server.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Send</span>
+        <h3>Composer and Replay</h3>
+        <p>Write a request from scratch, or edit a captured one, and send it. Press R to send the selected request again.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Measure</span>
+        <h3>Timing like your browser's tools</h3>
+        <p>A waterfall of every request's phases, a Timing tab for each one, and Statistics: bytes, compression savings, slowest requests and easy wins.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Investigate</span>
+        <h3>Find, Compare and TextWizard</h3>
+        <p>Search inside bodies, compare two sessions side by side, and decode Base64, URL encoding, JWTs and more.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Automate</span>
+        <h3>FiddlerScript and extensions</h3>
+        <p>Load a CustomRules.js-style script to change traffic as it passes, or add .NET extensions with their own inspectors, menus and columns.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Fit in</span>
+        <h3>Works on real networks</h3>
+        <p>Goes through your company's proxy, including PAC scripts and sign-in. Captures phones and other computers too, and opens and saves SAZ and HAR files.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Coming from Fiddler Classic?</h2>
+    <p class="intro">CLeARINET aims to feel familiar, while catching up with how the web has changed since Fiddler Classic's last big updates.</p>
+    <div class="split">
+      <div class="panel">
+        <h3>What carries over</h3>
+        <ul>
+          <li><strong>Your .saz files</strong> open as they are, and CLeARINET saves them too.</li>
+          <li><strong>FiddlerScript</strong>: OnBeforeRequest, OnBeforeResponse, Rules menu options, context actions and columns.</li>
+          <li><strong>Extensions</strong> port from their source with few changes; three ported extensions come with the installers.</li>
+          <li><strong>Familiar tools</strong>: breakpoints, AutoResponder rules, Composer, Replay, Find and TextWizard.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>What's new</h3>
+        <ul>
+          <li><strong>Timing</strong> shown the way browsers' developer tools show it.</li>
+          <li><strong>Compare</strong> built in, with no separate diff program to install.</li>
+          <li><strong>HAR import and export</strong>, zstd and Brotli, and cookie warnings for today's browser rules.</li>
+          <li><strong>macOS</strong> as well as Windows, built on .NET 10 and Avalonia.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="panel" style="text-align:center; padding: 36px 24px;">
+      <h2 style="margin-bottom:8px;">Free for any use, now and later</h2>
+      <p class="intro" style="margin: 0 auto 20px;">CLeARINET is MIT licensed and built in the open. Try the preview, report what breaks, or help build it.</p>
+      <div class="buttons" style="justify-content:center;">
+        <a class="button primary" href="{{ '/download/' | relative_url }}">Download the preview</a>
+        <a class="button" href="{{ site.repository_url }}/issues">Report an issue</a>
+      </div>
+    </div>
+  </div>
+</section>
