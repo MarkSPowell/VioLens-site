@@ -37,4 +37,8 @@ other files at GitHub. Commit and push `guide.md`.
    branch `main`, folder `/ (root)`.
 2. Once the domain is bought: Settings > Pages > Custom domain, enter it,
    and tick **Enforce HTTPS** when it's offered. (GitHub adds a `CNAME`
-   file to the repository.)
+   file to the repository.) Then change `baseurl` in `_config.yml` to `""`,
+   since the site is no longer under `/clearinet-site/`.
+
+The pages only work once GitHub has built them: opening `index.html`
+straight from the folder shows the page without its links and styles.

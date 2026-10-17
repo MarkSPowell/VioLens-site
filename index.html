@@ -56,7 +56,7 @@ description: CLeARINET is a free, open source HTTP(S) debugging proxy for Window
       <div class="card">
         <span class="tag">Inspect</span>
         <h3>Readable requests and responses</h3>
-        <p>Headers, Raw, JSON, WebForms, images, Hex and Cookies views. Bodies compressed with gzip, deflate, Brotli or zstd are decompressed for you.</p>
+        <p>Headers, Raw, JSON, WebForms, images, Hex and Cookies views, and every message on a WebSocket. Bodies compressed with gzip, deflate, Brotli or zstd are decompressed for you.</p>
       </div>
       <div class="card">
         <span class="tag">Change</span>
@@ -66,7 +66,7 @@ description: CLeARINET is a free, open source HTTP(S) debugging proxy for Window
       <div class="card">
         <span class="tag">Send</span>
         <h3>Composer and Replay</h3>
-        <p>Write a request from scratch, or edit a captured one, and send it. Press R to send the selected request again.</p>
+        <p>Write a request from scratch, or edit a captured one, and send it, binary bodies included, byte for byte. Press R to send the selected request again.</p>
       </div>
       <div class="card">
         <span class="tag">Measure</span>
@@ -80,13 +80,13 @@ description: CLeARINET is a free, open source HTTP(S) debugging proxy for Window
       </div>
       <div class="card">
         <span class="tag">Automate</span>
-        <h3>FiddlerScript and extensions</h3>
-        <p>Load a CustomRules.js-style script to change traffic as it passes, or add .NET extensions with their own inspectors, menus and columns.</p>
+        <h3>QuickExec, scripts and extensions</h3>
+        <p>Type QuickExec commands like ?login or bpu /api. Load a CustomRules.js-style script to change traffic as it passes, or add .NET extensions.</p>
       </div>
       <div class="card">
         <span class="tag">Fit in</span>
         <h3>Works on real networks</h3>
-        <p>Goes through your company's proxy, including PAC scripts and sign-in. Captures phones and other computers too, and opens and saves SAZ and HAR files.</p>
+        <p>Goes through your company's proxy, including PAC scripts and sign-in, and shows when a server asks for a client certificate. Captures phones too, and opens and saves SAZ and HAR files.</p>
       </div>
     </div>
   </div>
@@ -103,7 +103,7 @@ description: CLeARINET is a free, open source HTTP(S) debugging proxy for Window
           <li><strong>Your .saz files</strong> open as they are, and CLeARINET saves them too.</li>
           <li><strong>FiddlerScript</strong>: OnBeforeRequest, OnBeforeResponse, Rules menu options, context actions and columns.</li>
           <li><strong>Extensions</strong> port from their source with few changes; three ported extensions come with the installers.</li>
-          <li><strong>Familiar tools</strong>: breakpoints, AutoResponder rules, Composer, Replay, Find and TextWizard.</li>
+          <li><strong>Familiar tools</strong>: breakpoints, AutoResponder rules, Composer, Replay, Find, TextWizard and the QuickExec command box.</li>
         </ul>
       </div>
       <div class="panel">
@@ -111,6 +111,7 @@ description: CLeARINET is a free, open source HTTP(S) debugging proxy for Window
         <ul>
           <li><strong>Timing</strong> shown the way browsers' developer tools show it.</li>
           <li><strong>Compare</strong> built in, with no separate diff program to install.</li>
+          <li><strong>WebSocket messages</strong>, live, with compressed and fragmented messages put back together.</li>
           <li><strong>HAR import and export</strong>, zstd and Brotli, and cookie warnings for today's browser rules.</li>
           <li><strong>macOS</strong> as well as Windows, built on .NET 10 and Avalonia.</li>
         </ul>

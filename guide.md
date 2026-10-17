@@ -159,7 +159,9 @@ browsers' developer tools do:
   was transferred, and when the last one finished.
 - The **Timing** tab shows the selected session's phases with their
   durations, whether it used a new or reused connection (and through which
-  upstream proxy), and how long it sat at a breakpoint, if it did.
+  upstream proxy), and how long it sat at a breakpoint, if it did. For
+  HTTPS it also shows the TLS version and cipher suite CLeARINET agreed
+  with the server, and the server's certificate.
 - The **Statistics** tab sums up the sessions the filter shows: bytes sent
   and received (and what compression saved), breakdowns by type, status and
   host, the slowest requests, and easy wins such as text sent uncompressed,
@@ -172,6 +174,15 @@ file without timings have no bar.
 
 If you don't need timing, right-click a column header and uncheck
 **Waterfall** to hide that column.
+
+**Servers that ask for a client certificate (mutual TLS).** CLeARINET makes
+its own connection to the server, so when a server asks for a client
+certificate, it asks CLeARINET, and the browser never sees the request (or
+shows its certificate prompt). CLeARINET records it instead: the Timing tab
+says the server asked, and which certificate authorities it accepts, and the
+session gets a **Notes** tab with the `x-client-certificate-requested` note.
+CLeARINET doesn't send a client certificate yet, so a server that requires
+one refuses the connection; the 502 page then says that's the likely reason.
 
 ### Finding sessions
 
@@ -219,6 +230,34 @@ Binary bodies, such as images, are compared as a hex dump, or by size and
 SHA-256 hash when they're over 64 KB. Two very different large bodies are
 shown as one changed block rather than lined up line by line. You can
 keep several Compare windows open while capturing.
+
+### WebSocket messages
+
+Apps that keep a connection open for live updates, such as chat, dashboards
+and development servers, often use WebSockets. A WebSocket connection shows
+in the session list as the request that opened it, with status **101**.
+Select it and open the **WebSocket** tab to see its messages, as browsers'
+developer tools do:
+
+- **↑** is a message the client sent, and **↓** one it received. Each row
+  shows when it was sent (seconds after the connection opened), its type
+  (text, binary, close, ping or pong), its size and the start of its data.
+- Select a message to see it in full below the list: JSON is indented,
+  and binary data is shown as hex unless it's really text.
+- The list keeps growing while the connection is open, and the heading
+  says whether it's still open and how many messages have gone each way.
+- **Hide pings and pongs** hides the keep-alive messages some connections
+  send constantly.
+
+Compressed messages (permessage-deflate) are decompressed, and messages
+sent in several pieces are put back together. The Size column shows a
+compressed message's size as sent, then as decompressed. CLeARINET keeps up
+to 1 MB of each message and 64 MB per connection; beyond that it counts
+messages but doesn't keep their content. **Find** searches text messages
+too: sent messages count as the request, received ones as the response.
+
+WebSocket messages are saved in HAR files (and read from the HAR files
+browsers export), but not in SAZ files yet.
 
 ## TextWizard
 
@@ -347,8 +386,58 @@ Both send through CLeARINET itself, so capture has to be running. What they
 send shows up as a new session, and goes through the AutoResponder,
 breakpoints, FiddlerScript and extensions just like traffic from a browser.
 The Host header is set from the URL, and Content-Length from the body. The
-URL can be `http://` or `https://` (a path with no URL is sent as HTTPS),
-and the body is sent as text.
+URL can be `http://` or `https://` (a path with no URL is sent as HTTPS).
+Replay sends the captured request byte for byte, whatever its body.
+
+**Bodies that aren't text.** Under the request, **Body** says where the
+body comes from:
+
+- **In the request text** (the default): typed after the blank line, and
+  sent as UTF-8 text.
+- **Hex (exact bytes)**: typed as hex in the box that appears, such as
+  `89 50 4E 47 0D 0A`. Spaces and line breaks don't matter. Use it for
+  images, protobuf, compressed or other binary bodies.
+- **From a file**: a file you choose with **Browse…**, read when you click
+  Execute. Set the Content-Type header yourself.
+
+With Hex or a file, leave nothing after the blank line in the request text.
+**Edit in Composer** on a session whose body isn't text puts the body in
+the hex box for you, so it goes out exactly as captured.
+
+## QuickExec
+
+The box under the session list is **QuickExec**, Fiddler Classic's command
+line. Click it or press **Alt+Q** (**Edit > QuickExec**), type a command and
+press **Enter**. **Up** and **Down** bring back earlier commands, and
+**Escape** clears the box. What a command did shows on the status line.
+
+| Command | Does |
+|---|---|
+| `?text` | Selects sessions whose URL contains the text |
+| `@host` | Selects sessions whose host contains the text |
+| `=404` | Selects sessions with that status code |
+| `=POST` | Selects sessions with that method |
+| `>40k`, `<1k` | Selects sessions whose response body is larger or smaller (bytes, `k` or `mb`) |
+| `select type` | Selects sessions whose response Content-Type contains the text (`select image`) |
+| `allbut type` (or `keeponly`) | Removes every session whose Content-Type doesn't contain the text |
+| `cls` (or `clear`) | Removes all sessions |
+| `tail 100` | Keeps only the newest 100 sessions |
+| `bpu text` | Pauses requests whose URL contains the text (`bpu` on its own stops) |
+| `bpafter text` | Pauses responses to requests whose URL contains the text |
+| `bps 404` | Pauses responses with that status code |
+| `bpm POST` (or `bpv`) | Pauses requests with that method |
+| `go` | Lets every paused session continue |
+| `start`, `stop` | Starts or stops capturing |
+| `help` | Lists the commands and opens this guide |
+
+Selection commands select among the sessions the filter shows, so you can
+then compare, replay or remove them. The breakpoint commands set the same
+conditions as **Tools > Also Break On**, and show that row.
+
+Any other command goes to the loaded FiddlerScript's `OnExecAction`
+function (with the command split into words; "quoted text" stays one word),
+then to extensions that handle commands (`IHandleExecAction`). The first to
+return true has handled it.
 
 ## Connections: upstream proxy and other devices
 
