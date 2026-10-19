@@ -1,44 +1,65 @@
-# Copies the User Guide from the VioLens repository into this site as
-# guide.md. Run it after the guide changes (before or after a release):
+# Copies two documents from the VioLens repository into this site:
+#
+#   docs/User Guide.md         ->  guide.md       (/guide/)
+#   docs/Embedding ProxyCore.md ->  developers.md  (/developers/)
+#
+# Run it after either document changes (before or after a release):
 #
 #   ./update-guide.ps1
 #
 # It looks for the VioLens repository next to this one, or next to the
 # folder this one is in (under either name, VioLens or CLeARINET); pass
-# -Source to point somewhere else. Then commit and push guide.md as usual.
+# -Repository to point somewhere else. Then commit and push guide.md and
+# developers.md as usual.
 param(
-    [string]$Source
+    [string]$Repository
 )
 
 $ErrorActionPreference = 'Stop'
-if (-not $Source) {
+if (-not $Repository) {
     $candidates = foreach ($up in '..', '..\..') {
-        foreach ($name in 'VioLens', 'CLeARINET') { Join-Path $PSScriptRoot "$up\$name\docs\User Guide.md" }
+        foreach ($name in 'VioLens', 'CLeARINET') { Join-Path $PSScriptRoot "$up\$name" }
     }
-    $Source = $candidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
-    if (-not $Source) { throw "Couldn't find the VioLens repository's docs\User Guide.md; pass -Source." }
+    $Repository = $candidates | Where-Object { Test-Path -LiteralPath (Join-Path $_ 'docs\User Guide.md') } | Select-Object -First 1
+    if (-not $Repository) { throw "Couldn't find the VioLens repository; pass -Repository." }
 }
-$text = [IO.File]::ReadAllText((Resolve-Path $Source), [Text.Encoding]::UTF8) -replace "`r`n", "`n"
-$lines = $text -split "`n"
 
-# The guide's own title is replaced by the page's.
-if ($lines[0] -match '^# ') { $lines = $lines[1..($lines.Length - 1)] }
-$body = ($lines -join "`n").Trim("`n")
+$repositoryUrl = 'https://github.com/MarkSPowell/VioLens/blob/main'
 
-# Links to other files in the repository go to GitHub.
-$body = $body -replace '\]\(\.\./', '](https://github.com/MarkSPowell/VioLens/blob/main/'
-$body = $body -replace '\]\((?!https?://|#|mailto:)([^)]+)\)', '](https://github.com/MarkSPowell/VioLens/blob/main/docs/$1)'
+function Convert-Document {
+    param(
+        [string]$Source,
+        [string]$Target,
+        [string]$Title,
+        [string]$Description
+    )
 
-$header = @'
+    $text = [IO.File]::ReadAllText((Resolve-Path -LiteralPath $Source), [Text.Encoding]::UTF8) -replace "`r`n", "`n"
+    $lines = $text -split "`n"
+
+    # The document's own title is replaced by the page's.
+    if ($lines[0] -match '^# ') { $lines = $lines[1..($lines.Length - 1)] }
+
+    # A hand-written contents list (lines like "- [Section](#section)") is
+    # replaced by the page's own, which sits beside the text on wide screens.
+    $lines = $lines | Where-Object { $_ -notmatch '^- \[[^\]]+\]\(#[^)]+\)$' }
+    $body = ($lines -join "`n").Trim("`n")
+
+    # Links to other files in the repository go to GitHub.
+    $body = $body -replace '\]\(\.\./', "]($repositoryUrl/"
+    $body = $body -replace '\]\((?!https?://|#|mailto:)([^)]+)\)', "]($repositoryUrl/docs/`$1)"
+
+    $relative = 'docs/' + (Split-Path -Leaf $Source)
+    $header = @"
 ---
 layout: page
-title: User Guide
-description: How to use VioLens - capturing, inspecting, breakpoints, AutoResponder, Composer, FiddlerScript, extensions and more.
+title: $Title
+description: $Description
 body_class: guide
 ---
-<!-- Generated from docs/User Guide.md in the VioLens repository by update-guide.ps1. Edit the guide there, then run the script again. -->
+<!-- Generated from $relative in the VioLens repository by update-guide.ps1. Edit it there, then run the script again. -->
 
-# User Guide
+# $Title
 
 <details class="toc" markdown="1">
 <summary>Contents</summary>
@@ -49,8 +70,21 @@ body_class: guide
 </details>
 
 {% raw %}
-'@
+"@
 
-$out = ($header -replace "`r`n", "`n") + "`n" + $body + "`n{% endraw %}`n"
-[IO.File]::WriteAllText((Join-Path $PSScriptRoot 'guide.md'), $out, [Text.UTF8Encoding]::new($false))
-Write-Host "guide.md updated from $Source"
+    $out = ($header -replace "`r`n", "`n") + "`n" + $body + "`n{% endraw %}`n"
+    [IO.File]::WriteAllText((Join-Path $PSScriptRoot $Target), $out, [Text.UTF8Encoding]::new($false))
+    Write-Host "$Target updated from $Source"
+}
+
+Convert-Document `
+    -Source (Join-Path $Repository 'docs\User Guide.md') `
+    -Target 'guide.md' `
+    -Title 'User Guide' `
+    -Description 'How to use VioLens - capturing, inspecting, breakpoints, AutoResponder, Composer, FiddlerScript, extensions and more.'
+
+Convert-Document `
+    -Source (Join-Path $Repository 'docs\Embedding ProxyCore.md') `
+    -Target 'developers.md' `
+    -Title 'Embedding ProxyCore' `
+    -Description "Build your own HTTP(S) debugging tool on VioLens's proxy engine, the Violens.ProxyCore NuGet package."

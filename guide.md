@@ -4,7 +4,7 @@ title: User Guide
 description: How to use VioLens - capturing, inspecting, breakpoints, AutoResponder, Composer, FiddlerScript, extensions and more.
 body_class: guide
 ---
-<!-- Generated from docs/User Guide.md in the VioLens repository by update-guide.ps1. Edit the guide there, then run the script again. -->
+<!-- Generated from docs/User Guide.md in the VioLens repository by update-guide.ps1. Edit it there, then run the script again. -->
 
 # User Guide
 
@@ -17,6 +17,7 @@ body_class: guide
 </details>
 
 {% raw %}
+
 This is the end-user guide: how to actually use the app once it's running.
 If you're looking for build instructions, project layout, or the "why" behind
 a design decision, see [README.md](https://github.com/MarkSPowell/VioLens/blob/main/README.md) and the other documents in
@@ -32,10 +33,14 @@ this computer:
 - **Settings carry over.** The first time VioLens runs, it copies
   CLeARINET's settings, AutoResponder rules and FiddlerScript preferences
   into its own folder, and the extensions in `Documents\CLeARINET\Extensions`
-  into `Documents\VioLens\Extensions`. The old folders are left as they
-  were, each with a note saying where things went; delete them once you're
+  into `Documents\VioLens\Extensions`. The originals are left where they
+  were, with a note listing what was copied; delete those files once you're
   happy. If CLeARINET was closed without putting your proxy settings back,
   VioLens puts them back.
+- **Only CLeARINET's own files.** Another app with a similar name keeps its
+  files in folders called `Clearinet`, which Windows and macOS treat as the
+  same folders. VioLens only copies, and the installer only removes, the
+  files CLeARINET itself created, so anything else there is left alone.
 - **A new root certificate.** VioLens asks you to trust its own
   `DO_NOT_TRUST_ViolensRoot` certificate, then removes CLeARINET's
   `DO_NOT_TRUST_ClearinetRoot` (on Windows, the system asks you to confirm
@@ -43,7 +48,7 @@ this computer:
   certificate need the new one: visit `http://violens/` through the proxy
   to download it, and remove the old one from the device.
 - **The installer replaces CLeARINET.** On Windows, installing VioLens
-  removes CLeARINET's program folder and shortcuts. On macOS, VioLens is a
+  removes the program files and shortcuts CLeARINET installed. On macOS, VioLens is a
   separate app: drag CLeARINET from Applications to the Bin once VioLens
   is working.
 

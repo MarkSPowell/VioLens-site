@@ -13,23 +13,26 @@ push to `main` and the site updates within a minute or two.
 | `index.html` | Home |
 | `download.md` | Download (links to the latest GitHub release) |
 | `guide.md` | User Guide, generated from the app's `docs/User Guide.md` |
+| `developers.md` | Embedding ProxyCore, generated from the app's `docs/Embedding ProxyCore.md` |
 | `about.md` | Background, relationship to Fiddler, licence, contributing |
 
 The look is in `assets/site.css`; the header and footer are in
 `_layouts/default.html`.
 
-## Updating the User Guide
+## Updating the User Guide and the developer guide
 
-Don't edit `guide.md` by hand. Edit `docs/User Guide.md` in the VioLens
-repository, then, from this folder:
+Don't edit `guide.md` or `developers.md` by hand. Edit `docs/User Guide.md`
+or `docs/Embedding ProxyCore.md` in the VioLens repository, then, from this
+folder:
 
 ```
 ./update-guide.ps1
 ```
 
-It expects the VioLens repository next to this one (pass `-Source` to point
-elsewhere), copies the guide in, adds the contents list, and points links to
-other files at GitHub. Commit and push `guide.md`.
+It finds the VioLens repository next to this one, or next to the folder
+this one is in (pass `-Repository` to point elsewhere), copies both
+documents in, adds their contents lists, and points links to other files at
+GitHub. Commit and push `guide.md` and `developers.md`.
 
 ## Turning on GitHub Pages
 
