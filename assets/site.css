@@ -109,6 +109,8 @@ code, pre, kbd { font-family: var(--mono); font-size: 0.9em; }
 .wf i { position: absolute; top: 0; height: 10px; border-radius: 2px; }
 .wf .q { background: #59627a; } .wf .d { background: #2bb3a3; } .wf .c { background: #f08c3a; }
 .wf .t { background: #a77bf3; } .wf .w { background: #34d399; } .wf .r { background: #3b82f6; }
+.demo { max-width: 1088px; margin-left: auto; margin-right: auto; }
+.demo video { display: block; width: 100%; height: auto; }
 .mock-caption { font-size: 13px; color: var(--muted); text-align: center; margin: 12px 0 0; }
 
 /* Sections */

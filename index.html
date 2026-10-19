@@ -20,26 +20,18 @@ description: VioLens is a free, open source HTTP(S) debugging proxy for Windows 
   </div>
 
   <div class="wrap">
-    <figure class="mock" aria-label="Illustration of VioLens's session list">
-      <div class="mock-bar" aria-hidden="true"><span></span><span></span><span></span></div>
-      <div class="mock-scroll">
-        <table>
-          <thead>
-            <tr><th>#</th><th>Status</th><th>Method</th><th>URL</th><th>Resp</th><th>Waterfall</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>41</td><td class="s2">200</td><td>GET</td><td class="url">https://shop.example.com/</td><td>18.2 KB</td><td><div class="wf"><i class="q" style="left:0;width:4px"></i><i class="d" style="left:4px;width:14px"></i><i class="c" style="left:18px;width:16px"></i><i class="t" style="left:34px;width:22px"></i><i class="w" style="left:56px;width:30px"></i><i class="r" style="left:86px;width:10px"></i></div></td></tr>
-            <tr><td>42</td><td class="s2">200</td><td>GET</td><td class="url">https://cdn.example.com/app.3f9c.js</td><td>212 KB</td><td><div class="wf"><i class="q" style="left:96px;width:3px"></i><i class="w" style="left:99px;width:18px"></i><i class="r" style="left:117px;width:44px"></i></div></td></tr>
-            <tr class="selected"><td>43</td><td class="s4">401</td><td>POST</td><td class="url">https://api.example.com/v2/session</td><td>96 B</td><td><div class="wf"><i class="q" style="left:104px;width:3px"></i><i class="w" style="left:107px;width:52px"></i><i class="r" style="left:159px;width:3px"></i></div></td></tr>
-            <tr><td>44</td><td class="s3">302</td><td>GET</td><td class="url">https://login.example.com/authorize?client_id=web</td><td>0 B</td><td><div class="wf"><i class="q" style="left:162px;width:2px"></i><i class="d" style="left:164px;width:8px"></i><i class="c" style="left:172px;width:9px"></i><i class="t" style="left:181px;width:12px"></i><i class="w" style="left:193px;width:9px"></i></div></td></tr>
-            <tr class="found"><td>45</td><td class="s2">200</td><td>POST</td><td class="url">https://api.example.com/v2/session</td><td>1.4 KB</td><td><div class="wf"><i class="q" style="left:200px;width:2px"></i><i class="w" style="left:202px;width:14px"></i><i class="r" style="left:216px;width:3px"></i></div></td></tr>
-            <tr><td>46</td><td class="s2">200</td><td>GET</td><td class="url">https://cdn.example.com/hero.webp</td><td>88.0 KB</td><td><div class="wf"><i class="q" style="left:204px;width:2px"></i><i class="w" style="left:206px;width:6px"></i><i class="r" style="left:212px;width:8px"></i></div></td></tr>
-            <tr><td>47</td><td class="s5">502</td><td>GET</td><td class="url">https://metrics.example.net/collect</td><td>612 B</td><td><div class="wf"><i class="q" style="left:206px;width:2px"></i><i class="d" style="left:208px;width:12px"></i></div></td></tr>
-          </tbody>
-        </table>
-      </div>
+    <figure class="mock demo">
+      <video autoplay muted loop playsinline preload="metadata" poster="{{ '/assets/demo-poster.jpg' | relative_url }}" width="1086" height="782" aria-label="VioLens capturing a request to example.com, then showing its headers, the Composer and the Timing tab">
+        <source src="{{ '/assets/demo.mp4' | relative_url }}" type="video/mp4">
+      </video>
     </figure>
-    <p class="mock-caption">An illustration of the session list, with the waterfall showing each request's DNS lookup, connection, TLS handshake, wait and download.</p>
+    <p class="mock-caption">Capturing a page load, reading the request and response headers, and the Timing tab's DNS, connection, TLS and wait breakdown.</p>
+    <script>
+      // Respect "reduce motion": show the still frame instead of playing.
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('.demo video').forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); v.controls = true; });
+      }
+    </script>
   </div>
 </section>
 

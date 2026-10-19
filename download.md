@@ -26,7 +26,7 @@ description: Download VioLens for Windows or macOS, or build it from source.
     <p>macOS 11 or later on Apple silicon (M1 and newer). A disk image to drag into Applications.</p>
     <ul>
       <li>Still being tested on real Macs. Please report anything that doesn't work.</li>
-      <li>Not yet notarized by Apple: the first time, allow it in System Settings &gt; Privacy &amp; Security.</li>
+      <li>Not yet notarized by Apple, so macOS asks you to allow it the first time: see <a href="#opening-it-on-a-mac-the-first-time">Opening it on a Mac</a> below.</li>
       <li>Optional extensions are in the disk image's Optional Extensions folder.</li>
     </ul>
     <a class="button primary" href="{{ site.releases_url }}/latest">Get the macOS disk image</a>
@@ -46,6 +46,32 @@ description: Download VioLens for Windows or macOS, or build it from source.
 
 Nothing VioLens captures leaves your computer unless you save or send it yourself. The [User Guide]({{ '/guide/' | relative_url }}) covers the rest.
 
+## Opening it on a Mac the first time
+
+VioLens isn't notarized by Apple yet (that needs a paid Apple developer membership), so the first time you open it, macOS stops it with a message saying it can't check it for malware. To allow it, once:
+
+1. Drag VioLens from the disk image into Applications, and open it. When macOS stops it, click **Done** (or **OK**).
+2. Open **System Settings** > **Privacy & Security**, and scroll down to the Security section. It says VioLens was blocked.
+3. Click **Open Anyway**, then confirm with your password or Touch ID.
+
+After that, VioLens opens normally. If you'd rather use Terminal, this does the same thing:
+
+```
+xattr -dr com.apple.quarantine /Applications/VioLens.app
+```
+
+## What's not there yet
+
+VioLens is a preview. It handles everyday debugging well, and these are the gaps you might run into:
+
+- **HTTP/2 and HTTP/3** aren't supported yet. Connections through VioLens use HTTP/1.1, which every site still accepts.
+- **Client certificates (mutual TLS)** aren't sent yet, so a server that requires one refuses the connection.
+- **Upstream proxies:** plain HTTP proxies work, with Negotiate, NTLM or Basic sign-in. SOCKS proxies and Digest sign-in don't yet.
+- **Extensions:** a Fiddler Classic extension has to be rebuilt from its source for VioLens (usually by adding one file); a compiled `.dll` can't be dropped in as it is.
+- **macOS** has had less testing on real Macs than Windows has.
+
+The full list is in the [README]({{ site.repository_url }}#known-limitations). If something you rely on is missing, [say so in Discussions]({{ site.repository_url }}/discussions): that's how features get picked.
+
 ## Build it from source
 
 You'll need the [.NET 10 SDK](https://dotnet.microsoft.com/download). Then:
@@ -60,4 +86,4 @@ dotnet run --project apps/Violens.DesktopUi
 
 ## Release notes and older versions
 
-Every version, with what changed, is on the [Releases page]({{ site.releases_url }}). Found a problem? [Open an issue]({{ site.repository_url }}/issues).
+Every version, with what changed, is on the [Releases page]({{ site.releases_url }}). Found a problem? [Open an issue]({{ site.repository_url }}/issues). Questions and ideas are welcome in [Discussions]({{ site.repository_url }}/discussions).
