@@ -123,7 +123,7 @@ description: VioLens is a free, open source HTTP(S) debugging proxy for Windows 
 <section class="section">
   <div class="wrap">
     <h2>Build your own tool on the engine</h2>
-    <p class="intro">The proxy engine inside VioLens is a .NET library of its own, <code>Violens.ProxyCore</code>, published on NuGet with each release. Use it to build a debugger, a capture tool or a test harness, with hooks in the shape of Fiddler's: OnBeforeRequest, AutoTamper, session flags and breakpoints.</p>
+    <p class="intro">The proxy engine inside VioLens is a .NET library of its own, <code>Violens.ProxyCore</code>, published on NuGet with each release. Use it to build a debugger, a capture tool or a test harness, with hooks in the shape of Fiddler's: OnBeforeRequest, AutoTamper, session flags and breakpoints. Apps still on .NET Framework can use it too, through <code>Violens.ProxyHost.Client</code>, which runs the engine in a small process of its own.</p>
     <div class="buttons">
       <a class="button" href="{{ '/developers/' | relative_url }}">Read the Embedding ProxyCore guide</a>
     </div>
