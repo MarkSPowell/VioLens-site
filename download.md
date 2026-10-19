@@ -1,12 +1,12 @@
 ---
 layout: page
 title: Download
-description: Download CLeARINET for Windows or macOS, or build it from source.
+description: Download VioLens for Windows or macOS, or build it from source.
 ---
 
-# Download CLeARINET
+# Download VioLens
 
-<p class="lede">CLeARINET is in preview: it works, and it's getting better with every release. Every release, with its notes, is on GitHub.</p>
+<p class="lede">VioLens is in preview: it works, and it's getting better with every release. Every release, with its notes, is on GitHub.</p>
 
 <div class="downloads">
   <section class="download">
@@ -18,7 +18,7 @@ description: Download CLeARINET for Windows or macOS, or build it from source.
       <li>Optional extensions are offered as checkboxes during setup.</li>
     </ul>
     <a class="button primary" href="{{ site.releases_url }}/latest">Get the Windows installer</a>
-    <p>Download <code>CLeARINET-Setup-<em>version</em>.exe</code> from the latest release.</p>
+    <p>Download <code>VioLens-Setup-<em>version</em>.exe</code> from the latest release.</p>
   </section>
 
   <section class="download">
@@ -30,17 +30,21 @@ description: Download CLeARINET for Windows or macOS, or build it from source.
       <li>Optional extensions are in the disk image's Optional Extensions folder.</li>
     </ul>
     <a class="button primary" href="{{ site.releases_url }}/latest">Get the macOS disk image</a>
-    <p>Download <code>CLeARINET-<em>version</em>-macos-arm64.dmg</code> from the latest release.</p>
+    <p>Download <code>VioLens-<em>version</em>-macos-arm64.dmg</code> from the latest release.</p>
   </section>
+</div>
+
+<div class="callout">
+<p><strong>Used CLeARINET?</strong> VioLens is its new name. Install VioLens and your settings, rules and extensions come with it. On Windows the installer replaces CLeARINET; on macOS, remove CLeARINET from Applications once VioLens is working. See <a href="{{ '/guide/' | relative_url }}#upgrading-from-clearinet">Upgrading from CLeARINET</a>.</p>
 </div>
 
 ## The first time you run it
 
 1. Click **Start** to begin capturing.
-2. CLeARINET asks you to trust a new root certificate, named `DO_NOT_TRUST_ClearinetRoot`. It's made on your computer, just for your computer, and it's what lets CLeARINET read HTTPS traffic. On Windows this is Windows' own prompt; on macOS, CLeARINET asks first and then adds it to your login keychain.
+2. VioLens asks you to trust a new root certificate, named `DO_NOT_TRUST_ViolensRoot`. It's made on your computer, just for your computer, and it's what lets VioLens read HTTPS traffic. On Windows this is Windows' own prompt; on macOS, VioLens asks first and then adds it to your login keychain.
 3. Browse, and the requests appear in the session list. Click **Stop** when you're done, and your proxy settings go back to how they were.
 
-Nothing CLeARINET captures leaves your computer unless you save or send it yourself. The [User Guide]({{ '/guide/' | relative_url }}) covers the rest.
+Nothing VioLens captures leaves your computer unless you save or send it yourself. The [User Guide]({{ '/guide/' | relative_url }}) covers the rest.
 
 ## Build it from source
 
@@ -48,10 +52,10 @@ You'll need the [.NET 10 SDK](https://dotnet.microsoft.com/download). Then:
 
 ```
 git clone {{ site.repository_url }}.git
-cd CLeARINET
-dotnet build CLeARINET.sln
-dotnet test CLeARINET.sln
-dotnet run --project apps/Clearinet.DesktopUi
+cd VioLens
+dotnet build VioLens.sln
+dotnet test VioLens.sln
+dotnet run --project apps/Violens.DesktopUi
 ```
 
 ## Release notes and older versions

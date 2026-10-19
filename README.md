@@ -1,6 +1,6 @@
-# clearinet-site
+# VioLens website
 
-The website for [CLeARINET](https://github.com/MarkSPowell/CLeARINET), the
+The website for [VioLens](https://github.com/MarkSPowell/VioLens), the
 open source HTTP(S) inspection tool.
 
 GitHub Pages builds it with Jekyll, so there's nothing to install or run:
@@ -20,14 +20,14 @@ The look is in `assets/site.css`; the header and footer are in
 
 ## Updating the User Guide
 
-Don't edit `guide.md` by hand. Edit `docs/User Guide.md` in the CLeARINET
+Don't edit `guide.md` by hand. Edit `docs/User Guide.md` in the VioLens
 repository, then, from this folder:
 
 ```
 ./update-guide.ps1
 ```
 
-It expects the CLeARINET repository next to this one (pass `-Source` to point
+It expects the VioLens repository next to this one (pass `-Source` to point
 elsewhere), copies the guide in, adds the contents list, and points links to
 other files at GitHub. Commit and push `guide.md`.
 
@@ -35,10 +35,10 @@ other files at GitHub. Commit and push `guide.md`.
 
 1. Settings > Pages > Build and deployment: **Deploy from a branch**,
    branch `main`, folder `/ (root)`.
-2. Once the domain is bought: Settings > Pages > Custom domain, enter it,
-   and tick **Enforce HTTPS** when it's offered. (GitHub adds a `CNAME`
-   file to the repository.) Then change `baseurl` in `_config.yml` to `""`,
-   since the site is no longer under `/clearinet-site/`.
+2. Custom domain: `violens.dev` (the `CNAME` file), with **Enforce HTTPS**
+   on. The DNS is in Route 53: an A record for `violens.dev` with GitHub
+   Pages' four addresses (185.199.108.153 to 185.199.111.153), and a CNAME
+   for `www` pointing to `markspowell.github.io`.
 
 The pages only work once GitHub has built them: opening `index.html`
 straight from the folder shows the page without its links and styles.

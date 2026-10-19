@@ -1,15 +1,23 @@
-# Copies the User Guide from the CLeARINET repository into this site as
+# Copies the User Guide from the VioLens repository into this site as
 # guide.md. Run it after the guide changes (before or after a release):
 #
 #   ./update-guide.ps1
 #
-# It expects the CLeARINET repository next to this one; pass -Source to
-# point somewhere else. Then commit and push guide.md as usual.
+# It looks for the VioLens repository next to this one, or next to the
+# folder this one is in (under either name, VioLens or CLeARINET); pass
+# -Source to point somewhere else. Then commit and push guide.md as usual.
 param(
-    [string]$Source = (Join-Path $PSScriptRoot '..\CLeARINET\docs\User Guide.md')
+    [string]$Source
 )
 
 $ErrorActionPreference = 'Stop'
+if (-not $Source) {
+    $candidates = foreach ($up in '..', '..\..') {
+        foreach ($name in 'VioLens', 'CLeARINET') { Join-Path $PSScriptRoot "$up\$name\docs\User Guide.md" }
+    }
+    $Source = $candidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+    if (-not $Source) { throw "Couldn't find the VioLens repository's docs\User Guide.md; pass -Source." }
+}
 $text = [IO.File]::ReadAllText((Resolve-Path $Source), [Text.Encoding]::UTF8) -replace "`r`n", "`n"
 $lines = $text -split "`n"
 
@@ -18,17 +26,17 @@ if ($lines[0] -match '^# ') { $lines = $lines[1..($lines.Length - 1)] }
 $body = ($lines -join "`n").Trim("`n")
 
 # Links to other files in the repository go to GitHub.
-$body = $body -replace '\]\(\.\./', '](https://github.com/MarkSPowell/CLeARINET/blob/main/'
-$body = $body -replace '\]\((?!https?://|#|mailto:)([^)]+)\)', '](https://github.com/MarkSPowell/CLeARINET/blob/main/docs/$1)'
+$body = $body -replace '\]\(\.\./', '](https://github.com/MarkSPowell/VioLens/blob/main/'
+$body = $body -replace '\]\((?!https?://|#|mailto:)([^)]+)\)', '](https://github.com/MarkSPowell/VioLens/blob/main/docs/$1)'
 
 $header = @'
 ---
 layout: page
 title: User Guide
-description: How to use CLeARINET - capturing, inspecting, breakpoints, AutoResponder, Composer, FiddlerScript, extensions and more.
+description: How to use VioLens - capturing, inspecting, breakpoints, AutoResponder, Composer, FiddlerScript, extensions and more.
 body_class: guide
 ---
-<!-- Generated from docs/User Guide.md in the CLeARINET repository by update-guide.ps1. Edit the guide there, then run the script again. -->
+<!-- Generated from docs/User Guide.md in the VioLens repository by update-guide.ps1. Edit the guide there, then run the script again. -->
 
 # User Guide
 
