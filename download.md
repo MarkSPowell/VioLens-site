@@ -86,4 +86,4 @@ dotnet run --project apps/Violens.DesktopUi
 
 ## Release notes and older versions
 
-Every version, with what changed, is on the [Releases page]({{ site.releases_url }}). Found a problem? [Open an issue]({{ site.repository_url }}/issues). Questions and ideas are welcome in [Discussions]({{ site.repository_url }}/discussions).
+Every version, with what changed, is on the [Releases page]({{ site.releases_url }}). Found a problem? [Open an issue]({{ site.repository_url }}/issues). Questions and ideas are welcome on [Discord]({{ site.discord_url }}) or in [Discussions]({{ site.repository_url }}/discussions).

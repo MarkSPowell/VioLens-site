@@ -28,6 +28,7 @@
         <a href="{{ '/developers/' | relative_url }}" {% if page.url == '/developers/' %}aria-current="page"{% endif %}>Developers</a>
         <a href="{{ '/about/' | relative_url }}" {% if page.url == '/about/' %}aria-current="page"{% endif %}>About</a>
         <a href="{{ site.repository_url }}">GitHub</a>
+        <a href="{{ site.discord_url }}">Discord</a>
       </nav>
     </div>
   </header>
@@ -38,7 +39,7 @@
 
   <footer class="site-footer">
     <div class="wrap footer-row">
-      <p>VioLens is free and open source under the <a href="{{ site.repository_url }}/blob/main/LICENSE">MIT licence</a>.</p>
+      <p>VioLens is free and open source under the <a href="{{ site.repository_url }}/blob/main/LICENSE">MIT licence</a>. Questions or ideas? Join us on <a href="{{ site.discord_url }}">Discord</a>.</p>
       <p class="fine">VioLens is an independent project, not affiliated with Progress Software or Telerik. Fiddler is a trademark of Progress Software Corporation, used here only to describe compatibility.</p>
     </div>
   </footer>

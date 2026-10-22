@@ -36,6 +36,7 @@ VioLens is inspired by Eric Lawrence's public writing about Fiddler, including [
 ## Get involved
 
 - **Try it** and [report what breaks]({{ site.repository_url }}/issues). Bug reports from real networks are the most useful thing right now.
+- **Talk about it** on [Discord]({{ site.discord_url }}): questions, ideas, or how you're using VioLens.
 - **Contribute** code, tests or documentation. Start with the [contributing guide]({{ site.repository_url }}/blob/main/CONTRIBUTING.md) and the [code of conduct]({{ site.repository_url }}/blob/main/CODE_OF_CONDUCT.md).
 - **Port an extension** you relied on in Fiddler Classic. The [User Guide]({{ '/guide/' | relative_url }}#extensions) explains how extensions work in VioLens.
 

@@ -11,6 +11,7 @@ permalink: pretty
 description: An open source HTTP(S) inspection tool, a successor to Fiddler Classic. Free for any use, under the MIT licence.
 repository_url: https://github.com/MarkSPowell/VioLens
 releases_url: https://github.com/MarkSPowell/VioLens/releases
+discord_url: https://discord.gg/NJfnGnn4PT
 markdown: kramdown
 kramdown:
   input: GFM
