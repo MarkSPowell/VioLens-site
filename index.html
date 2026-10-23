@@ -8,13 +8,13 @@ description: VioLens is a free, open source HTTP(S) debugging proxy for Windows 
     <div>
       <span class="eyebrow">Open source · MIT licence · Preview</span>
       <h1>See inside your <span class="accent">HTTP and HTTPS</span> traffic.</h1>
-      <p class="lede">VioLens is a debugging proxy for Windows and macOS. Capture the requests your browsers and apps make, read them, change them, and send them again. It picks up where Fiddler Classic left off, and it's free for any use.</p>
+      <p class="lede">VioLens is a debugging proxy for Windows and Mac. It shows you every request your browsers and apps make, and lets you change them and send them again. If you've used Fiddler Classic, you'll know your way around. It's free, for any use.</p>
       <div class="buttons">
         <a class="button primary" href="{{ '/download/' | relative_url }}">Download</a>
         <a class="button" href="{{ '/guide/' | relative_url }}">Read the User Guide</a>
         <a class="button" href="{{ site.repository_url }}">View on GitHub</a>
       </div>
-      <p class="note">Preview releases for 64-bit Windows 10 and 11, and for macOS 11 or later on Apple silicon (still being tested).</p>
+      <p class="note">It's a preview. It runs on 64-bit Windows 10 and 11, and on Apple silicon Macs with macOS 11 or later.</p>
     </div>
     <img class="hero-emblem" src="{{ '/assets/emblem.png' | relative_url }}" alt="The VioLens emblem: a fiddle and bow under a magnifying glass that shows HTTPS" width="226" height="192">
   </div>
@@ -37,48 +37,40 @@ description: VioLens is a free, open source HTTP(S) debugging proxy for Windows 
 
 <section class="section">
   <div class="wrap">
-    <h2>Everything you need to debug the web</h2>
-    <p class="intro">Point a browser, an app or a phone at VioLens and every request shows up in the list, decrypted and decompressed, ready to read.</p>
+    <h2>What it does</h2>
+    <p class="intro">Point a browser, an app or a phone at VioLens and every request shows up in the list, already decrypted and decompressed.</p>
     <div class="cards">
       <div class="card">
-        <span class="tag">Capture</span>
-        <h3>HTTPS and plain HTTP</h3>
-        <p>Decrypts HTTPS with a root certificate made on your own machine. It becomes the system proxy while it runs, and puts your settings back when it stops.</p>
+        <h3>Captures HTTPS and HTTP</h3>
+        <p>HTTPS is decrypted with a root certificate created on your own machine. VioLens sets itself as the system proxy while it runs and puts your settings back when you stop it.</p>
       </div>
       <div class="card">
-        <span class="tag">Inspect</span>
-        <h3>Readable requests and responses</h3>
-        <p>Headers, Raw, JSON, WebForms, images, Hex and Cookies views, and every message on a WebSocket. Bodies compressed with gzip, deflate, Brotli or zstd are decompressed for you.</p>
+        <h3>Shows you what was sent</h3>
+        <p>Headers, Raw, JSON, WebForms, images, Hex and Cookies views, plus every WebSocket message. gzip, deflate, Brotli and zstd bodies are decompressed for you.</p>
       </div>
       <div class="card">
-        <span class="tag">Change</span>
         <h3>Breakpoints and AutoResponder</h3>
-        <p>Pause a request or response, edit it, then let it go on. Or answer requests with your own files, redirects, delays and errors before they reach the server.</p>
+        <p>Pause a request or response, edit it and let it carry on. Or answer requests yourself with a file, a redirect, a delay or an error, so they never reach the server.</p>
       </div>
       <div class="card">
-        <span class="tag">Send</span>
         <h3>Composer and Replay</h3>
-        <p>Write a request from scratch, or edit a captured one, and send it, binary bodies included, byte for byte. Press R to send the selected request again.</p>
+        <p>Write a request from scratch or start from a captured one, and send it byte for byte, binary bodies included. Press R to send the selected request again.</p>
       </div>
       <div class="card">
-        <span class="tag">Measure</span>
-        <h3>Timing like your browser's tools</h3>
-        <p>A waterfall of every request's phases, a Timing tab for each one, and Statistics: bytes, compression savings, slowest requests and easy wins.</p>
+        <h3>Timing</h3>
+        <p>A waterfall of each request's phases, a Timing tab for the details, and Statistics showing bytes, compression savings and the slowest requests.</p>
       </div>
       <div class="card">
-        <span class="tag">Investigate</span>
         <h3>Find, Compare and TextWizard</h3>
-        <p>Search inside bodies, compare two sessions side by side, and decode Base64, URL encoding, JWTs and more.</p>
+        <p>Search inside bodies, put two sessions side by side, and decode Base64, URL encoding, JWTs and more.</p>
       </div>
       <div class="card">
-        <span class="tag">Automate</span>
         <h3>QuickExec, scripts and extensions</h3>
-        <p>Type QuickExec commands like ?login or bpu /api. Load a CustomRules.js-style script to change traffic as it passes, or add .NET extensions.</p>
+        <p>Type commands like <code>?login</code> or <code>bpu /api</code>. Load a CustomRules.js-style script to change traffic on the way through, or add .NET extensions.</p>
       </div>
       <div class="card">
-        <span class="tag">Fit in</span>
-        <h3>Works on real networks</h3>
-        <p>Goes through your company's proxy, including PAC scripts and sign-in, and shows when a server asks for a client certificate. Captures phones too, and opens and saves SAZ and HAR files.</p>
+        <h3>Works on a company network</h3>
+        <p>It goes through your corporate proxy, PAC scripts and sign-in included, and tells you when a server asks for a client certificate. It can capture phones too, and it opens and saves SAZ and HAR files.</p>
       </div>
     </div>
   </div>
@@ -87,25 +79,25 @@ description: VioLens is a free, open source HTTP(S) debugging proxy for Windows 
 <section class="section">
   <div class="wrap">
     <h2>Coming from Fiddler Classic?</h2>
-    <p class="intro">VioLens aims to feel familiar, while catching up with how the web has changed since Fiddler Classic's last big updates.</p>
+    <p class="intro">I've used Fiddler for over 15 years, so VioLens works the way I expect a debugging proxy to work. It also picks up a few things the web has gained since Fiddler Classic's last big update.</p>
     <div class="split">
       <div class="panel">
         <h3>What carries over</h3>
         <ul>
-          <li><strong>Your .saz files</strong> open as they are, and VioLens saves them too.</li>
-          <li><strong>FiddlerScript</strong>: OnBeforeRequest, OnBeforeResponse, Rules menu options, context actions and columns.</li>
-          <li><strong>Extensions</strong> port from their source with few changes; three ported extensions come with the installers.</li>
-          <li><strong>Familiar tools</strong>: breakpoints, AutoResponder rules, Composer, Replay, Find, TextWizard and the QuickExec command box.</li>
+          <li>Your .saz files open as they are, and VioLens saves them too.</li>
+          <li>FiddlerScript: OnBeforeRequest, OnBeforeResponse, Rules menu options, context actions and columns.</li>
+          <li>Extensions can be ported from their source with few changes. Three ported ones come with the installers.</li>
+          <li>Breakpoints, AutoResponder rules, Composer, Replay, Find, TextWizard and the QuickExec box.</li>
         </ul>
       </div>
       <div class="panel">
         <h3>What's new</h3>
         <ul>
-          <li><strong>Timing</strong> shown the way browsers' developer tools show it.</li>
-          <li><strong>Compare</strong> built in, with no separate diff program to install.</li>
-          <li><strong>WebSocket messages</strong>, live, with compressed and fragmented messages put back together.</li>
-          <li><strong>HAR import and export</strong>, zstd and Brotli, and cookie warnings for today's browser rules.</li>
-          <li><strong>macOS</strong> as well as Windows, built on .NET 10 and Avalonia.</li>
+          <li>Timing laid out the way the browser developer tools show it.</li>
+          <li>Compare is built in, so there's no separate diff program to install.</li>
+          <li>Live WebSocket messages, with compressed and fragmented ones put back together.</li>
+          <li>HAR import and export, zstd and Brotli, and cookie warnings based on today's browser rules.</li>
+          <li>It runs on a Mac as well as Windows (it's built on .NET 10 and Avalonia).</li>
         </ul>
       </div>
     </div>
@@ -114,8 +106,8 @@ description: VioLens is a free, open source HTTP(S) debugging proxy for Windows 
 
 <section class="section">
   <div class="wrap">
-    <h2>Build your own tool on the engine</h2>
-    <p class="intro">The proxy engine inside VioLens is a .NET library of its own, <code>Violens.ProxyCore</code>, published on NuGet with each release. Use it to build a debugger, a capture tool or a test harness, with hooks in the shape of Fiddler's: OnBeforeRequest, AutoTamper, session flags and breakpoints. Apps still on .NET Framework can use it too, through <code>Violens.ProxyHost.Client</code>, which runs the engine in a small process of its own.</p>
+    <h2>Building your own tool?</h2>
+    <p class="intro">The proxy engine is a separate .NET library, <code>Violens.ProxyCore</code>, published on NuGet with each release. You can build your own debugger, capture tool or test harness on it, with Fiddler-style hooks such as OnBeforeRequest, AutoTamper, session flags and breakpoints. If your app is still on .NET Framework, <code>Violens.ProxyHost.Client</code> runs the engine in a small process of its own and talks to it for you.</p>
     <div class="buttons">
       <a class="button" href="{{ '/developers/' | relative_url }}">Read the Embedding ProxyCore guide</a>
     </div>
@@ -125,8 +117,8 @@ description: VioLens is a free, open source HTTP(S) debugging proxy for Windows 
 <section class="section">
   <div class="wrap">
     <div class="panel" style="text-align:center; padding: 36px 24px;">
-      <h2 style="margin-bottom:8px;">Free for any use, now and later</h2>
-      <p class="intro" style="margin: 0 auto 20px;">VioLens is MIT licensed and built in the open. Try the preview, report what breaks, or help build it.</p>
+      <h2 style="margin-bottom:8px;">Free, and MIT licensed</h2>
+      <p class="intro" style="margin: 0 auto 20px;">You can use VioLens for anything, at work or at home. Give the preview a try, and if something breaks, I'd like to hear about it.</p>
       <div class="buttons" style="justify-content:center;">
         <a class="button primary" href="{{ '/download/' | relative_url }}">Download the preview</a>
         <a class="button" href="{{ site.repository_url }}/issues">Report an issue</a>

@@ -1,45 +1,44 @@
 ---
 layout: page
 title: About
-description: Why VioLens exists, how it relates to Fiddler Classic, and how to get involved.
+description: Why I built VioLens, how it relates to Fiddler Classic, and how to get involved.
 ---
 
 # About VioLens
 
-<p class="lede">VioLens is an open source HTTP(S) inspection tool for developers: a successor to Fiddler Classic that anyone can use, for anything, for free.</p>
+<p class="lede">VioLens is a free, open source HTTP(S) debugging proxy for Windows and Mac. I work in tech during the day and build VioLens in my spare time. Anyone can use it, for anything.</p>
 
-## Why it exists
+## Why I started it
 
-For more than twenty years, Fiddler was the tool many developers reached for to see what their browsers and apps were really sending and receiving. Fiddler Classic's major updates mostly ended around 2016, and in 2026 Progress Software changed its licence to allow non-commercial use only.
+I've used Fiddler for more than 15 years, mostly to troubleshoot problems at work and to debug web apps and APIs. Whenever something didn't behave, it was the first thing I opened.
 
-VioLens was started to keep that kind of tool available to everyone: free for personal and commercial use under the MIT licence, built in the open, and running on both Windows and macOS.
+In 2026 Progress Software changed Fiddler Classic's licence to allow non-commercial use only. That meant I couldn't keep using it the way I always had, and neither could a lot of other people. Fiddler Classic hadn't had a major update in years anyway, and it only ever ran on Windows. So I started building a replacement: free for personal and commercial use under the MIT licence, built in the open, and running on both Windows and macOS.
+
+Building it has been humbling. Fiddler had far more features than I'd ever touched in all those years, and recreating them meant finally learning what they all do.
 
 ## The name
 
-VioLens was called CLeARINET until version 0.2. The new name keeps the musical theme (say it out loud: violins), and the lens is what it's for: seeing inside the traffic your browsers and apps send. Settings carry over from CLeARINET automatically; the [User Guide]({{ '/guide/' | relative_url }}#upgrading-from-clearinet) explains what changes.
+Until version 0.2, VioLens was called CLeARINET. I kept the musical theme (say it out loud and you'll hear violins), and the lens is the point of the tool: seeing inside the traffic your browsers and apps send. Your settings carry over from CLeARINET automatically. The [User Guide]({{ '/guide/' | relative_url }}#upgrading-from-clearinet) explains what changes.
 
-## What guides it
+## What I'm aiming for
 
-- **Familiar to Fiddler users.** As compatible as practical with how Fiddler Classic works: its files, its scripts, its extensions and its habits.
-- **Caught up with the web.** HTTP and browsers have changed a lot since 2016, and VioLens follows today's standards.
-- **Driven by what people need.** New features come from real debugging work, like DevTools-style timing and built-in Compare.
-- **Reusable.** The proxy engine is its own library, so other tools and front ends can build on it.
+If you know Fiddler Classic, VioLens should feel familiar: its files, scripts, extensions and habits work as closely to Fiddler's as I can make them. But HTTP and browsers have changed a lot since 2016, so it also keeps up with how the web works today. New features come from real debugging work (DevTools-style timing and the built-in Compare both started that way). And the proxy engine is its own library, so other tools can be built on it.
 
-## Relationship to Fiddler
+## VioLens and Fiddler
 
-VioLens is an independent open source project. It isn't affiliated with, endorsed by or sponsored by Progress Software Corporation or Telerik. Fiddler, Fiddler Classic, Fiddler Everywhere, FiddlerCore and Telerik are trademarks of Progress Software Corporation; VioLens uses those names only to describe what it's compatible with, and never presents itself, or anything it ships, as Fiddler.
+VioLens is an independent project. It isn't affiliated with, endorsed by or sponsored by Progress Software Corporation or Telerik. Fiddler, Fiddler Classic, Fiddler Everywhere, FiddlerCore and Telerik are trademarks of Progress Software Corporation. I use those names only to say what VioLens is compatible with, and VioLens never presents itself, or anything it ships, as Fiddler.
 
-VioLens is built independently, from publicly available documentation, publicly observable behaviour (such as the structure of the `.saz` files the real tool produces) and its own design decisions. It contains no code from Fiddler, and is never built from decompiled or leaked source. The [contributing guide]({{ site.repository_url }}/blob/main/CONTRIBUTING.md) sets out this clean-room policy in full.
+It's written from scratch. I work from public documentation, behaviour anyone can observe (such as the structure of the `.saz` files Fiddler saves) and my own design decisions. It contains no Fiddler code and is never built from decompiled or leaked source. The [contributing guide]({{ site.repository_url }}/blob/main/CONTRIBUTING.md) sets out this clean-room rule in full.
 
-VioLens is inspired by Eric Lawrence's public writing about Fiddler, including [Fiddler in 2026](https://textslashplain.com/2026/08/05/fiddler-in-2026/). It builds on some of his published open source work under its own licences, such as the NetLog importer that comes with the installers as an optional extension.
+Eric Lawrence's public writing about Fiddler, including [Fiddler in 2026](https://textslashplain.com/2026/08/05/fiddler-in-2026/), has been a big help. VioLens also builds on some of his published open source work under its own licences, such as the NetLog importer that the installers offer as an optional extension.
 
-## Get involved
+## Getting involved
 
-- **Try it** and [report what breaks]({{ site.repository_url }}/issues). Bug reports from real networks are the most useful thing right now.
-- **Talk about it** on [Discord]({{ site.discord_url }}): questions, ideas, or how you're using VioLens.
-- **Contribute** code, tests or documentation. Start with the [contributing guide]({{ site.repository_url }}/blob/main/CONTRIBUTING.md) and the [code of conduct]({{ site.repository_url }}/blob/main/CODE_OF_CONDUCT.md).
-- **Port an extension** you relied on in Fiddler Classic. The [User Guide]({{ '/guide/' | relative_url }}#extensions) explains how extensions work in VioLens.
+- Try it, and [tell me what breaks]({{ site.repository_url }}/issues). Bug reports from real networks are the most useful thing right now.
+- Come and talk about it on [Discord]({{ site.discord_url }}): questions, ideas, or how you're using VioLens.
+- Contribute code, tests or documentation. The [contributing guide]({{ site.repository_url }}/blob/main/CONTRIBUTING.md) and [code of conduct]({{ site.repository_url }}/blob/main/CODE_OF_CONDUCT.md) are the place to start.
+- If you relied on a Fiddler Classic extension, help port it. The [User Guide]({{ '/guide/' | relative_url }}#extensions) explains how extensions work in VioLens.
 
 ## Licence
 
-VioLens is released under the [MIT licence]({{ site.repository_url }}/blob/main/LICENSE). The optional extensions included with the installers are separate works by their authors, under their own licences.
+VioLens is released under the [MIT licence]({{ site.repository_url }}/blob/main/LICENSE). The optional extensions that come with the installers are separate works by their authors, under their own licences.
