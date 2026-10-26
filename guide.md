@@ -1,7 +1,8 @@
 ---
 layout: page
 title: User Guide
-description: How to use VioLens - capturing, inspecting, breakpoints, AutoResponder, Composer, FiddlerScript, extensions and more.
+seo_title: "VioLens User Guide: Capture, Inspect and Replay HTTPS Traffic"
+description: How to use VioLens, the free HTTPS debugging proxy - capturing, inspecting, breakpoints, AutoResponder, Composer, FiddlerScript, extensions and more.
 body_class: guide
 ---
 <!-- Generated from docs/User Guide.md in the VioLens repository by update-guide.ps1. Edit it there, then run the script again. -->

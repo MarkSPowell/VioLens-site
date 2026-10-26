@@ -1,14 +1,34 @@
 ---
 layout: default
 title: VioLens
-description: VioLens is a free, open source HTTP(S) debugging proxy for Windows and macOS. Capture, inspect, change and replay web traffic. A successor to Fiddler Classic, MIT licensed.
+seo_title: "VioLens: Free Fiddler Classic Alternative and HTTPS Debugger"
+description: Free, open source HTTPS debugging proxy for Windows and Mac. A Fiddler Classic alternative that opens your SAZ files and runs your FiddlerScript. MIT licence.
 ---
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "VioLens",
+  "alternateName": "CLeARINET",
+  "description": "A free, open source HTTP and HTTPS debugging proxy for Windows and macOS, and an alternative to Fiddler Classic.",
+  "url": "{{ site.url }}/",
+  "downloadUrl": "{{ site.releases_url }}/latest",
+  "image": "{{ '/assets/social-card.png' | absolute_url }}",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "Web debugging proxy",
+  "operatingSystem": "Windows 10, Windows 11, macOS 11 or later",
+  "license": "https://opensource.org/licenses/MIT",
+  "isAccessibleForFree": true,
+  "codeRepository": "{{ site.repository_url }}",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="eyebrow">Open source · MIT licence · Preview</span>
+      <span class="eyebrow">Free web debugging proxy · Open source · Preview</span>
       <h1>See inside your <span class="accent">HTTP and HTTPS</span> traffic.</h1>
-      <p class="lede">VioLens is a debugging proxy for Windows and Mac. It shows you every request your browsers and apps make, and lets you change them and send them again. If you've used Fiddler Classic, you'll know your way around. It's free, for any use.</p>
+      <p class="lede">VioLens is a free, open source HTTPS debugger for Windows and Mac, and an alternative to Fiddler Classic. It shows you every request your browsers and apps make, and lets you change them and send them again. If you've used Fiddler, you'll know your way around. It's free for any use, including at work.</p>
       <div class="buttons">
         <a class="button primary" href="{{ '/download/' | relative_url }}">Download</a>
         <a class="button" href="{{ '/guide/' | relative_url }}">Read the User Guide</a>
@@ -79,7 +99,7 @@ description: VioLens is a free, open source HTTP(S) debugging proxy for Windows 
 <section class="section">
   <div class="wrap">
     <h2>Coming from Fiddler Classic?</h2>
-    <p class="intro">I've used Fiddler for over 15 years, so VioLens works the way I expect a debugging proxy to work. It also picks up a few things the web has gained since Fiddler Classic's last big update.</p>
+    <p class="intro">Fiddler Classic's licence now allows non-commercial use only, so a lot of people need something else for work. I've used Fiddler for over 15 years, so VioLens works the way I expect a debugging proxy to work. It also picks up a few things the web has gained since Fiddler Classic's last big update.</p>
     <div class="split">
       <div class="panel">
         <h3>What carries over</h3>
@@ -100,6 +120,10 @@ description: VioLens is a free, open source HTTP(S) debugging proxy for Windows 
           <li>It runs on a Mac as well as Windows (it's built on .NET 10 and Avalonia).</li>
         </ul>
       </div>
+    </div>
+    <div class="buttons" style="margin-top:20px;">
+      <a class="button" href="{{ '/fiddler-classic-alternative/' | relative_url }}">Moving from Fiddler Classic</a>
+      <a class="button" href="{{ '/how-to/' | relative_url }}">How-to guides</a>
     </div>
   </div>
 </section>

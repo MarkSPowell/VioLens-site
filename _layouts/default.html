@@ -3,11 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% if page.title and page.url != "/" %}{{ page.title }} · {% endif %}{{ site.title }}</title>
-  <meta name="description" content="{{ page.description | default: site.description }}">
-  <meta property="og:title" content="{{ page.title | default: site.title }}">
-  <meta property="og:description" content="{{ page.description | default: site.description }}">
-  <meta property="og:type" content="website">
+  {%- comment -%} A page can set seo_title for a fuller title in search results; otherwise it's "Page · VioLens". {%- endcomment %}
+  <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{% if page.title and page.url != "/" %}{{ page.title }} · {% endif %}{{ site.title }}{% endif %}</title>
+  {% seo title=false %}
   <link rel="icon" type="image/png" href="{{ '/assets/favicon.png' | relative_url }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +22,7 @@
       </a>
       <nav aria-label="Main">
         <a href="{{ '/download/' | relative_url }}" {% if page.url == '/download/' %}aria-current="page"{% endif %}>Download</a>
+        <a href="{{ '/fiddler-classic-alternative/' | relative_url }}" {% if page.url == '/fiddler-classic-alternative/' %}aria-current="page"{% endif %}>Switch from Fiddler</a>
         <a href="{{ '/guide/' | relative_url }}" {% if page.url == '/guide/' %}aria-current="page"{% endif %}>User Guide</a>
         <a href="{{ '/developers/' | relative_url }}" {% if page.url == '/developers/' %}aria-current="page"{% endif %}>Developers</a>
         <a href="{{ '/about/' | relative_url }}" {% if page.url == '/about/' %}aria-current="page"{% endif %}>About</a>
@@ -40,6 +39,7 @@
   <footer class="site-footer">
     <div class="wrap footer-row">
       <p>VioLens is free and open source under the <a href="{{ site.repository_url }}/blob/main/LICENSE">MIT licence</a>. Questions or ideas? Join us on <a href="{{ site.discord_url }}">Discord</a>.</p>
+      <p class="footer-links"><a href="{{ '/fiddler-classic-alternative/' | relative_url }}">Fiddler Classic alternative</a> · <a href="{{ '/how-to/' | relative_url }}">How-to guides</a> · <a href="{{ '/guide/' | relative_url }}">User Guide</a></p>
       <p class="fine">VioLens is an independent project, not affiliated with Progress Software or Telerik. Fiddler is a trademark of Progress Software Corporation, used here only to describe compatibility.</p>
     </div>
   </footer>

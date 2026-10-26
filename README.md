@@ -15,6 +15,18 @@ push to `main` and the site updates within a minute or two.
 | `guide.md` | User Guide, generated from the app's `docs/User Guide.md` |
 | `developers.md` | Embedding ProxyCore, generated from the app's `docs/Embedding ProxyCore.md` |
 | `about.md` | Background, relationship to Fiddler, licence, contributing |
+| `fiddler-classic-alternative.md` | For people leaving Fiddler Classic: the licence change, what carries over, how to switch, FAQ |
+| `compare.md` | VioLens compared with other web debuggers. Not published yet (`published: false`) until it's fact-checked |
+| `how-to/` | Short how-to guides; a page with `howto: true` and an `order` is listed on `/how-to/` automatically |
+| `robots.txt` | Points search engines at `/sitemap.xml`, which jekyll-sitemap generates |
+
+Search titles and link previews: each page can set `seo_title` (the title
+in search results; keep it under about 60 characters) and `description`
+(the snippet; under about 155). `jekyll-seo-tag` adds the canonical link,
+Open Graph and Twitter tags, using `assets/social-card.png` as the preview
+image unless a page sets `image`. The FAQ on the Fiddler page comes from
+its front matter, via `_includes/faq.html`, which also writes the FAQ's
+structured data.
 
 The look is in `assets/site.css`; the header and footer are in
 `_layouts/default.html`.

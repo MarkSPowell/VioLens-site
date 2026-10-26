@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Embedding ProxyCore
+seo_title: "Embedding ProxyCore: Build an HTTPS Debugging Proxy in .NET"
 description: Build your own HTTP(S) debugging tool on VioLens's proxy engine, the Violens.ProxyCore NuGet package.
 body_class: guide
 ---

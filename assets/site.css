@@ -58,6 +58,8 @@ code, pre, kbd { font-family: var(--mono); font-size: 0.9em; }
 .site-footer { border-top: 1px solid var(--border); margin-top: 80px; padding: 28px 0 40px; color: var(--muted); font-size: 14px; }
 .footer-row p { margin: 0 0 6px; }
 .footer-row .fine { font-size: 13px; }
+.footer-links a { color: var(--muted); }
+.footer-links a:hover { color: var(--accent); }
 
 /* Buttons */
 .button {
@@ -180,3 +182,21 @@ code, pre, kbd { font-family: var(--mono); font-size: 0.9em; }
 
 /* Long code and URLs wrap rather than widening the page on phones. */
 .prose p, .prose li, .prose td { overflow-wrap: anywhere; }
+
+/* FAQ (Fiddler Classic alternative page) */
+.faq details { background: var(--bg-raised); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin: 10px 0; }
+.faq summary { cursor: pointer; font-weight: 600; color: var(--text); }
+.faq details[open] summary { margin-bottom: 8px; }
+.faq details p:last-child { margin-bottom: 0; }
+
+/* Comparison table: the first column stays put while the rest scroll on phones. */
+.compare-table th:first-child, .compare-table td:first-child { position: sticky; left: 0; background: var(--bg); color: var(--muted); font-weight: 600; }
+.compare-table th:nth-child(2), .compare-table td:nth-child(2) { color: var(--text); background: rgba(45, 212, 232, 0.08); }
+.compare-table td, .compare-table th { min-width: 140px; }
+
+/* How-to index */
+.howto-list { list-style: none; padding: 0; display: grid; gap: 12px; }
+.howto-list li { background: var(--bg-raised); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; margin: 0; }
+.howto-list a { font-weight: 600; }
+.howto-list p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+.related { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); }

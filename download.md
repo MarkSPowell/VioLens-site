@@ -1,7 +1,8 @@
 ---
 layout: page
 title: Download
-description: Download VioLens for Windows or macOS, or build it from source.
+seo_title: Download VioLens for Windows and Mac · Free HTTPS Debugger
+description: Download VioLens, a free and open source HTTPS debugging proxy, for Windows 10 and 11 or Apple silicon Macs. Or build it from source.
 ---
 
 # Download VioLens

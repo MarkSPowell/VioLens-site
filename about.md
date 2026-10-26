@@ -1,7 +1,8 @@
 ---
 layout: page
 title: About
-description: Why I built VioLens, how it relates to Fiddler Classic, and how to get involved.
+seo_title: About VioLens, an Open Source Fiddler Classic Alternative
+description: Why I built VioLens after Fiddler Classic became non-commercial only, how it relates to Fiddler, and how to get involved.
 ---
 
 # About VioLens

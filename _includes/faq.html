@@ -1,0 +1,28 @@
+{%- comment -%}
+  Shows the questions in a page's front matter (faq: a list of q and a, with
+  the answers in Markdown) and describes them for search engines as well, so
+  the two never drift apart.
+{%- endcomment -%}
+<div class="faq">
+{%- for item in page.faq %}
+<details>
+<summary>{{ item.q }}</summary>
+{{ item.a | markdownify }}
+</details>
+{%- endfor %}
+</div>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+  {%- for item in page.faq %}
+    {
+      "@type": "Question",
+      "name": {{ item.q | jsonify }},
+      "acceptedAnswer": { "@type": "Answer", "text": {{ item.a | markdownify | strip_html | strip | jsonify }} }
+    }{% unless forloop.last %},{% endunless %}
+  {%- endfor %}
+  ]
+}
+</script>

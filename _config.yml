@@ -8,10 +8,23 @@ baseurl: ""
 
 # Pages at /download/, /guide/ and /about/ rather than /download.html.
 permalink: pretty
-description: An open source HTTP(S) inspection tool, a successor to Fiddler Classic. Free for any use, under the MIT licence.
+description: A free, open source HTTPS debugging proxy for Windows and Mac, and an alternative to Fiddler Classic. Free for any use, under the MIT licence.
 repository_url: https://github.com/MarkSPowell/VioLens
 releases_url: https://github.com/MarkSPowell/VioLens/releases
 discord_url: https://discord.gg/NJfnGnn4PT
+
+# Search engines and link previews. jekyll-seo-tag writes the canonical
+# link, Open Graph and Twitter tags and JSON-LD; jekyll-sitemap writes
+# /sitemap.xml. GitHub Pages supports both without any other setup.
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+logo: /assets/emblem.png
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/social-card.png
 markdown: kramdown
 kramdown:
   input: GFM

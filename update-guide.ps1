@@ -31,6 +31,7 @@ function Convert-Document {
         [string]$Source,
         [string]$Target,
         [string]$Title,
+        [string]$SeoTitle,
         [string]$Description
     )
 
@@ -54,6 +55,7 @@ function Convert-Document {
 ---
 layout: page
 title: $Title
+seo_title: "$SeoTitle"
 description: $Description
 body_class: guide
 ---
@@ -81,10 +83,12 @@ Convert-Document `
     -Source (Join-Path $Repository 'docs\User Guide.md') `
     -Target 'guide.md' `
     -Title 'User Guide' `
-    -Description 'How to use VioLens - capturing, inspecting, breakpoints, AutoResponder, Composer, FiddlerScript, extensions and more.'
+    -SeoTitle 'VioLens User Guide: Capture, Inspect and Replay HTTPS Traffic' `
+    -Description 'How to use VioLens, the free HTTPS debugging proxy - capturing, inspecting, breakpoints, AutoResponder, Composer, FiddlerScript, extensions and more.'
 
 Convert-Document `
     -Source (Join-Path $Repository 'docs\Embedding ProxyCore.md') `
     -Target 'developers.md' `
     -Title 'Embedding ProxyCore' `
+    -SeoTitle 'Embedding ProxyCore: Build an HTTPS Debugging Proxy in .NET' `
     -Description "Build your own HTTP(S) debugging tool on VioLens's proxy engine, the Violens.ProxyCore NuGet package."
