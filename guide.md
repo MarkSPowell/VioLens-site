@@ -83,9 +83,11 @@ HTTPS interception works on both Windows and macOS, but the Mac build is
 newer and less tested. See the Known limitations section of
 [README.md](https://github.com/MarkSPowell/VioLens/blob/main/README.md) for details.
 
-The macOS app isn't notarized, so when you first open it macOS says it
-can't verify the developer. Open it anyway from **System Settings >
-Privacy & Security > Open Anyway**. You only need to do this once.
+A macOS build that's signed and notarized opens like any other app. One
+that isn't (one you built yourself, or a test build) makes macOS say it
+can't verify the developer the first time you open it. Open it anyway
+from **System Settings > Privacy & Security > Open Anyway**. You only
+need to do this once.
 
 ## The session list and inspectors
 
@@ -134,6 +136,13 @@ To remove sessions, use **Edit > Remove Selected Session** (or press
 **Delete** in the session list) or **Edit > Remove All Sessions**. Removed
 sessions are gone for good: they're no longer in the list or in what
 **Save SAZ** writes.
+
+The **Version** column shows the HTTP version the browser used with
+VioLens, followed by the one VioLens used with the server when they differ:
+`HTTP/2 → HTTP/1.1` means the browser used HTTP/2 but the site only offered
+HTTP/1.1. HTTP/2 is a preview and off by default; turn it on with **Use
+HTTP/2 with browsers** under **Tools > Connections**. (Fiddler Classic's
+Protocol column showed HTTP or HTTPS; here that's the start of the URL.)
 
 The **Image Bloat** column shows, for image responses, the bloat bytes out
 of the file's size and the percentage. Rows where bloat is at least a
@@ -415,6 +424,12 @@ breakpoints, FiddlerScript and extensions just like traffic from a browser.
 The Host header is set from the URL, and Content-Length from the body. The
 URL can be `http://` or `https://` (a path with no URL is sent as HTTPS).
 Replay sends the captured request byte for byte, whatever its body.
+
+To send over HTTP/2, write `HTTP/2` as the version on the first line of an
+`https://` request; Replay of an HTTP/2 session does the same. That needs
+**Use HTTP/2 with browsers** on (under **Tools > Connections**). Without
+it the request goes over HTTP/1.1 and the Composer says so. SAZ files save
+HTTP/2 sessions as `HTTP/2.0` and HAR files as `http/2.0`, as Chrome does.
 
 **Bodies that aren't text.** Under the request, **Body** says where the
 body comes from:
@@ -713,7 +728,8 @@ had is lost. To reset every setting, quit VioLens and delete the file.
 
 ## Known limitations
 
-VioLens is still a preview. The main gaps are HTTP/2, client
+VioLens is still a preview. The main gaps are HTTP/2 (a preview, off by
+default), client
 certificates, SOCKS proxies and Digest proxy sign-in, and the Mac build
 has had less use than the Windows one. The full list is in the Known
 limitations section of [README.md](https://github.com/MarkSPowell/VioLens/blob/main/README.md).

@@ -7,9 +7,7 @@
   <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{% if page.title and page.url != "/" %}{{ page.title }} · {% endif %}{{ site.title }}{% endif %}</title>
   {% seo title=false %}
   <link rel="icon" type="image/png" href="{{ '/assets/favicon.png' | relative_url }}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" href="{{ '/assets/fonts/inter-latin-400-normal.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
 </head>
 <body class="{{ page.body_class }}">
@@ -39,7 +37,7 @@
   <footer class="site-footer">
     <div class="wrap footer-row">
       <p>VioLens is free and open source under the <a href="{{ site.repository_url }}/blob/main/LICENSE">MIT licence</a>. Questions or ideas? Join us on <a href="{{ site.discord_url }}">Discord</a>.</p>
-      <p class="footer-links"><a href="{{ '/fiddler-classic-alternative/' | relative_url }}">Fiddler Classic alternative</a> · <a href="{{ '/how-to/' | relative_url }}">How-to guides</a> · <a href="{{ '/guide/' | relative_url }}">User Guide</a></p>
+      <p class="footer-links"><a href="{{ '/fiddler-classic-alternative/' | relative_url }}">Fiddler Classic alternative</a> · <a href="{{ '/how-to/' | relative_url }}">How-to guides</a> · <a href="{{ '/guide/' | relative_url }}">User Guide</a> · <a href="{{ '/privacy/' | relative_url }}">Privacy</a></p>
       <p class="fine">VioLens is an independent project, not affiliated with Progress Software or Telerik. Fiddler is a trademark of Progress Software Corporation, used here only to describe compatibility.</p>
     </div>
   </footer>

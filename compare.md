@@ -22,7 +22,7 @@ description: An honest comparison of HTTPS debugging proxies for anyone leaving 
 | **Source** | Open source (MIT) | Closed | Closed | Closed | Open source (MIT) | Open source (AGPL) | Closed |
 | **Platforms** | Windows, Mac (Apple silicon) | Windows | Windows, Mac, Linux | Windows, Mac, Linux | Windows, Mac, Linux | Windows, Mac, Linux | Mac, Windows, Linux |
 | **Interface** | Desktop app | Desktop app | Desktop app | Desktop app | Terminal, web UI and Python | Desktop app | Desktop app |
-| **HTTP/2** | Not yet | No | Yes | Yes | Yes, and HTTP/3 | Yes | Yes |
+| **HTTP/2** | Preview (off by default) | No | Yes | Yes | Yes, and HTTP/3 | Yes | Yes |
 | **Runs FiddlerScript (CustomRules.js)** | Yes | Yes | No | No | No | No | No |
 | **Scripting and extending** | FiddlerScript, .NET extensions | FiddlerScript, .NET extensions | C# scripts (beta) | Rewrite and Map tools | Python add-ons | Rules (more in Pro) | JavaScript scripts |
 | **Embeddable engine** | Violens.ProxyCore (NuGet, free) | FiddlerCore (sold separately) | No | No | Python library | Open source libraries | No |
@@ -35,7 +35,7 @@ VioLens, Fiddler Classic and Fiddler Everywhere all open the `.saz` files Fiddle
 
 ### VioLens
 
-Pick VioLens if you liked how Fiddler Classic worked and want to keep working that way for free, including at work. Your SAZ files, CustomRules.js, AutoResponder rules, QuickExec commands and keyboard habits carry over, and it runs on a Mac too. It's a preview, though. It doesn't support HTTP/2 or send client certificates yet, and the Mac version has had less use. [Moving from Fiddler Classic]({{ '/fiddler-classic-alternative/' | relative_url }}) explains what carries over.
+Pick VioLens if you liked how Fiddler Classic worked and want to keep working that way for free, including at work. Your SAZ files, CustomRules.js, AutoResponder rules, QuickExec commands and keyboard habits carry over, and it runs on a Mac too. It's a preview, though. HTTP/2 is still a preview, it doesn't send client certificates yet, and the Mac version has had less use. [Moving from Fiddler Classic]({{ '/fiddler-classic-alternative/' | relative_url }}) explains what carries over.
 
 ### Fiddler Everywhere
 

@@ -17,7 +17,7 @@ You'll need a Mac with Apple silicon (M1 or newer) and macOS 11 or later.
 
 [Download the disk image]({{ '/download/' | relative_url }}), open it and drag VioLens into Applications.
 
-VioLens isn't notarized by Apple yet, so the first time you open it macOS blocks it. Open **System Settings > Privacy & Security**, scroll to Security and click **Open Anyway**. You only need to do this once. The [Download page]({{ '/download/' | relative_url }}#opening-it-on-a-mac-the-first-time) has the details.
+VioLens is signed with an Apple Developer ID and notarized by Apple, so it opens like any other app. If macOS asks whether you want to open an app downloaded from the internet, click **Open**. (If you built VioLens yourself, see [Opening it on a Mac]({{ '/download/' | relative_url }}#opening-it-on-a-mac).)
 
 ## 2. Start capturing
 

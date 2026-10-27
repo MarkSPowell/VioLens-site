@@ -24,7 +24,7 @@ faq:
       Usually, if you have the extension's source. It can be rebuilt for VioLens with small changes, often just removing its `using Fiddler;` lines, and then it runs on Windows and Mac. A compiled Fiddler `.dll` can't be dropped in as it is. Extensions that rely on old Windows Forms controls can run in VioLens's separate Legacy Extension Host on Windows.
   - q: What doesn't VioLens do yet?
     a: |
-      It doesn't send client certificates (mutual TLS) yet, and it can't use SOCKS upstream proxies or Digest proxy sign-in. Like Fiddler Classic, it speaks HTTP/1.1 to servers; HTTP/2 isn't supported yet. The Mac version has had less use than the Windows one. The [Download page](/download/#whats-not-there-yet) lists the gaps.
+      It doesn't send client certificates (mutual TLS) yet, and it can't use SOCKS upstream proxies or Digest proxy sign-in. HTTP/2, which Fiddler Classic never supported, is in preview: turn it on under **Tools > Connections**. The Mac version has had less use than the Windows one. The [Download page](/download/#whats-not-there-yet) lists the gaps.
   - q: Is VioLens made by Progress or Telerik?
     a: |
       No. VioLens is an independent open source project, written from scratch. It isn't affiliated with or endorsed by Progress Software or Telerik.
@@ -71,7 +71,7 @@ I used Fiddler for more than 15 years, and I built VioLens to replace it in my o
 | Extensions | .NET extensions, ported from their source |
 | FiddlerCore | [`Violens.ProxyCore`]({{ '/developers/' | relative_url }}), on NuGet |
 
-It also does a few things Fiddler Classic never did. It runs on a Mac, shows live WebSocket messages, decompresses Brotli and zstd, and warns about cookies today's browsers will refuse.
+It also does a few things Fiddler Classic never did. It runs on a Mac, captures HTTP/2 (in preview), shows live WebSocket messages, decompresses Brotli and zstd, and warns about cookies today's browsers will refuse.
 
 ## Moving from Fiddler Classic to VioLens
 

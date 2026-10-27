@@ -15,7 +15,7 @@ description: Download VioLens, a free and open source HTTPS debugging proxy, for
     <p>64-bit Windows 10 or 11. One installer with everything included, so there's nothing else to install first.</p>
     <ul>
       <li>Installs just for you, or for everyone on the computer.</li>
-      <li>It's code-signed, so Windows can check it hasn't been tampered with.</li>
+      <li>It's code-signed, so Windows can check it hasn't been tampered with. Windows may still warn you about it for now. <a href="#if-windows-says-it-protected-your-pc">Here's why</a>.</li>
       <li>Setup offers the optional extensions as checkboxes.</li>
     </ul>
     <a class="button primary" href="{{ site.releases_url }}/latest">Get the Windows installer</a>
@@ -27,7 +27,7 @@ description: Download VioLens, a free and open source HTTPS debugging proxy, for
     <p>macOS 11 or later on Apple silicon (M1 and newer). Open the disk image and drag VioLens into Applications.</p>
     <ul>
       <li>The Mac version is newer than the Windows one, so please report anything that doesn't work.</li>
-      <li>It isn't notarized by Apple yet, so macOS asks you to allow it the first time. <a href="#opening-it-on-a-mac-the-first-time">Here's how</a>.</li>
+      <li>It's signed with an Apple Developer ID and notarized by Apple, so it opens like any other app.</li>
       <li>The optional extensions are in the disk image's Optional Extensions folder.</li>
     </ul>
     <a class="button primary" href="{{ site.releases_url }}/latest">Get the macOS disk image</a>
@@ -47,11 +47,23 @@ description: Download VioLens, a free and open source HTTPS debugging proxy, for
 
 Nothing VioLens captures leaves your computer unless you save or send it yourself. The [User Guide]({{ '/guide/' | relative_url }}) covers everything else.
 
-## Opening it on a Mac the first time
+## If Windows says it protected your PC
 
-VioLens isn't notarized by Apple yet (that needs a paid Apple developer membership), so the first time you open it, macOS blocks it and says it can't check it for malware. You only have to allow it once:
+Windows SmartScreen may show **Windows protected your PC** when you run the installer. That happens to new downloads Windows hasn't seen many people install yet, even when they're signed. The warning goes away as more people install VioLens.
 
-1. Drag VioLens from the disk image into Applications, and open it. When macOS stops it, click **Done** (or **OK**).
+To check the installer is genuine, right-click it, choose **Properties**, and open the **Digital Signatures** tab: it should be signed by VioLens's publisher. Then run it, click **More info**, and click **Run anyway**.
+
+VioLens doesn't collect any data. The [privacy policy]({{ '/privacy/' | relative_url }}) has the details.
+
+## Opening it on a Mac
+
+The Mac disk image and the app inside it are signed with an Apple Developer ID and notarized by Apple, so macOS checks them and opens VioLens without any extra steps. The first time, macOS may ask you to confirm you want to open an app downloaded from the internet. Click **Open**.
+
+### Builds that aren't signed
+
+Versions from before notarization started, and builds you make yourself from source, aren't notarized. The first time you open one, macOS blocks it and says it can't check it for malware. You only have to allow it once:
+
+1. Open VioLens. When macOS stops it, click **Done** (or **OK**).
 2. Open **System Settings** > **Privacy & Security**, and scroll down to the Security section. It says VioLens was blocked.
 3. Click **Open Anyway**, then confirm with your password or Touch ID.
 
@@ -65,7 +77,7 @@ xattr -dr com.apple.quarantine /Applications/VioLens.app
 
 These are the gaps you're most likely to run into:
 
-- HTTP/2 and HTTP/3 aren't supported yet. Connections through VioLens use HTTP/1.1, which every site still accepts.
+- HTTP/2 is a preview and off by default. Turn it on with **Use HTTP/2 with browsers (preview)** under **Tools > Connections**; [here's how]({{ '/how-to/debug-http2-traffic/' | relative_url }}). Without it, connections through VioLens use HTTP/1.1, which every site still accepts. HTTP/3 isn't supported.
 - Client certificates (mutual TLS) aren't sent yet, so a server that requires one will refuse the connection.
 - Plain HTTP upstream proxies work, with Negotiate, NTLM or Basic sign-in. SOCKS proxies and Digest sign-in don't yet.
 - A Fiddler Classic extension has to be rebuilt from its source (usually by adding one file). You can't drop in a compiled `.dll` as it is.

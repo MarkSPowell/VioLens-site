@@ -18,6 +18,7 @@ push to `main` and the site updates within a minute or two.
 | `fiddler-classic-alternative.md` | For people leaving Fiddler Classic: the licence change, what carries over, how to switch, FAQ |
 | `compare.md` | VioLens compared with other web debuggers. Not published yet (`published: false`) until it's fact-checked |
 | `how-to/` | Short how-to guides; a page with `howto: true` and an `order` is listed on `/how-to/` automatically |
+| `privacy.md` | Privacy policy (linked from the footer, the Download page and Microsoft submissions). Update it if the app or site ever starts sending data anywhere |
 | `robots.txt` | Points search engines at `/sitemap.xml`, which jekyll-sitemap generates |
 
 Search titles and link previews: each page can set `seo_title` (the title
@@ -28,7 +29,7 @@ image unless a page sets `image`. The FAQ on the Fiddler page comes from
 its front matter, via `_includes/faq.html`, which also writes the FAQ's
 structured data.
 
-The look is in `assets/site.css`; the header and footer are in
+The look is in `assets/site.css`, and the fonts are served from `assets/fonts` rather than Google Fonts, so the site makes no third-party requests; the header and footer are in
 `_layouts/default.html`.
 
 ## Updating the User Guide and the developer guide
