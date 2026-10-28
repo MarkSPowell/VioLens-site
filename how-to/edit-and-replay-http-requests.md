@@ -5,6 +5,7 @@ order: 3
 title: How to edit and replay HTTP requests
 seo_title: "How to Edit, Intercept and Replay HTTP Requests · VioLens"
 description: Pause a live request with a breakpoint and change it, resend a captured request, or write one from scratch, with VioLens, a free debugging proxy.
+summary: "Pause a live request and change it, send a captured one again, or write one from scratch."
 ---
 
 # How to edit and replay HTTP requests

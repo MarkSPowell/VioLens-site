@@ -23,7 +23,7 @@ Until version 0.2, VioLens was called CLeARINET. I kept the musical theme (say i
 
 ## What I'm aiming for
 
-If you know Fiddler Classic, VioLens should feel familiar: its files, scripts, extensions and habits work as closely to Fiddler's as I can make them. But HTTP and browsers have changed a lot since 2016, so it also keeps up with how the web works today. New features come from real debugging work (DevTools-style timing and the built-in Compare both started that way). And the proxy engine is its own library, so other tools can be built on it.
+If you know Fiddler Classic, VioLens should feel familiar. I've tried to make its files, scripts, extensions and keyboard shortcuts work as closely to Fiddler's as I can. But a lot has changed since 2016 (HTTP/2, Brotli, WebSockets everywhere, stricter cookie rules), so it handles those too. Most new features came out of my own debugging: the DevTools-style timing and the built-in Compare both started that way. And the proxy engine is a separate library, so other people can build their own tools on it.
 
 ## VioLens and Fiddler
 

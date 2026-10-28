@@ -5,6 +5,7 @@ order: 2
 title: How to see your iPhone or Android phone's HTTPS traffic
 seo_title: "How to Capture iPhone and Android HTTPS Traffic · VioLens"
 description: Route a phone's traffic through VioLens on your Windows PC or Mac, install its certificate, and inspect the HTTPS requests your mobile apps make.
+summary: "Point your phone at VioLens on your computer, install its certificate, and watch what your apps send."
 ---
 
 # How to see your iPhone or Android phone's HTTPS traffic

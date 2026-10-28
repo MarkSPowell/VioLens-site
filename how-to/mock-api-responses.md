@@ -5,6 +5,7 @@ order: 4
 title: How to mock an API response without changing the server
 seo_title: "How to Mock API Responses with a Proxy · VioLens"
 description: Answer requests with a local file, an error, a redirect or a delay using VioLens's AutoResponder, so you can test your app without touching the server.
+summary: "Answer requests with a file, an error, a redirect or a delay, without touching the server."
 ---
 
 # How to mock an API response without changing the server

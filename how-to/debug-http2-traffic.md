@@ -5,6 +5,7 @@ order: 1.5
 title: How to capture and debug HTTP/2 traffic
 seo_title: "How to Capture and Debug HTTP/2 Traffic · VioLens"
 description: Use HTTP/2 in VioLens, a free debugging proxy, to see browsers' HTTP/2 requests as they really are, and send your own requests over HTTP/2.
+summary: "Check which HTTP version each request used, and send your own requests over HTTP/2."
 ---
 
 # How to capture and debug HTTP/2 traffic

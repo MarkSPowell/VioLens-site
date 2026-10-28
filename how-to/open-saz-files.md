@@ -5,6 +5,7 @@ order: 6
 title: How to open Fiddler SAZ files, and convert them to HAR
 seo_title: "How to Open SAZ Files and Convert SAZ to HAR · VioLens"
 description: Open a .saz Fiddler session archive without Fiddler, on Windows or a Mac, and save it as a HAR file for browser developer tools and support teams.
+summary: "Open a .saz file without Fiddler, on Windows or a Mac, and save it as HAR."
 ---
 
 # How to open Fiddler SAZ files, and convert them to HAR

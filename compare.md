@@ -35,7 +35,7 @@ VioLens, Fiddler Classic and Fiddler Everywhere all open the `.saz` files Fiddle
 
 ### VioLens
 
-Pick VioLens if you liked how Fiddler Classic worked and want to keep working that way for free, including at work. Your SAZ files, CustomRules.js, AutoResponder rules, QuickExec commands and keyboard habits carry over, and it runs on a Mac too. It's a preview, though. HTTP/2 is still a preview, it doesn't send client certificates yet, and the Mac version has had less use. [Moving from Fiddler Classic]({{ '/fiddler-classic-alternative/' | relative_url }}) explains what carries over.
+Pick VioLens if you liked how Fiddler Classic worked and want to keep working that way for free, including at work. Your SAZ files, CustomRules.js, AutoResponder rules, QuickExec commands and keyboard habits carry over, and it runs on a Mac too. It's still a preview, though: it sends only one client certificate at a time, can't use SOCKS proxies, and the Mac version has had less use. [Moving from Fiddler Classic]({{ '/fiddler-classic-alternative/' | relative_url }}) explains what carries over.
 
 ### Fiddler Everywhere
 
@@ -47,7 +47,7 @@ A long-standing paid proxy for Windows, Mac and Linux, popular with mobile devel
 
 ### mitmproxy
 
-Free and open source, and very capable: HTTP/2, HTTP/3, WebSockets and more, scriptable in Python. It runs in a terminal or a web browser rather than as a desktop app. It's a great choice for automation and security testing, and less familiar if you're used to Fiddler's Inspectors.
+Free and open source, with HTTP/2, HTTP/3 and WebSockets, scriptable in Python. It runs in a terminal or a web browser rather than as a desktop app. It's well suited to automation and security testing, but it'll feel unfamiliar if you're used to Fiddler's Inspectors.
 
 ### HTTP Toolkit
 
@@ -55,7 +55,7 @@ An open source desktop app for Windows, Mac and Linux, with one-click setup for 
 
 ### Proxyman
 
-A polished paid app, best known on the Mac and now on Windows and Linux too, with iOS apps on its higher plans. It has HTTP/2 and JavaScript scripting. The free trial is limited.
+A paid app, best known on the Mac and now on Windows and Linux too, with iOS apps on its higher plans. It has HTTP/2 and JavaScript scripting. The free trial is limited.
 
 ### Other tools people use instead
 

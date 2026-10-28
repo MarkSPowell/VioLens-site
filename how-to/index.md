@@ -12,6 +12,6 @@ description: Step-by-step guides to debugging web traffic with VioLens, a free H
 {% assign guides = site.pages | where: "howto", true | sort: "order" %}
 <ul class="howto-list">
 {%- for g in guides %}
-  <li><a href="{{ g.url | relative_url }}">{{ g.title }}</a><p>{{ g.description }}</p></li>
+  <li><a href="{{ g.url | relative_url }}">{{ g.title }}</a><p>{{ g.summary | default: g.description }}</p></li>
 {%- endfor %}
 </ul>

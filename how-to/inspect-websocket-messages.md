@@ -5,6 +5,7 @@ order: 5
 title: How to inspect WebSocket messages
 seo_title: "How to Inspect WebSocket Messages from Any App · VioLens"
 description: See every WebSocket message an app or browser sends and receives, decompressed and live, with VioLens, a free HTTPS debugging proxy.
+summary: "Watch every message a WebSocket sends and receives, as it happens."
 ---
 
 # How to inspect WebSocket messages

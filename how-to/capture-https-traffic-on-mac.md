@@ -5,11 +5,12 @@ order: 1
 title: How to capture and decrypt HTTPS traffic on a Mac
 seo_title: "How to Capture and Decrypt HTTPS Traffic on a Mac · VioLens"
 description: See the HTTPS requests your browsers and apps make on macOS, decrypted, with a free debugging proxy. A Fiddler-style tool for the Mac.
+summary: "Install VioLens on an Apple silicon Mac, trust its certificate, and see what your browsers and apps send."
 ---
 
 # How to capture and decrypt HTTPS traffic on a Mac
 
-<p class="lede">Fiddler Classic only ever ran on Windows. VioLens is a free, open source debugging proxy that runs on Apple silicon Macs, so you can see every request your browsers and apps make, decrypted, and change them if you need to.</p>
+<p class="lede">Fiddler Classic never ran on a Mac. VioLens does: it shows you every request your browsers and apps make, decrypted, and you can change them if you need to.</p>
 
 You'll need a Mac with Apple silicon (M1 or newer) and macOS 11 or later.
 
