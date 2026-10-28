@@ -14,8 +14,8 @@ push to `main` and the site updates within a minute or two.
 | `download.md` | Download (links to the latest GitHub release) |
 | `guide.md` | User Guide, generated from the app's `docs/User Guide.md` |
 | `developers.md` | Embedding ProxyCore, generated from the app's `docs/Embedding ProxyCore.md` |
-| `about.md` | Background, relationship to Fiddler, licence, contributing |
-| `fiddler-classic-alternative.md` | For people leaving Fiddler Classic: the licence change, what carries over, how to switch, FAQ |
+| `about.md` | Background, relationship to Fiddler, license, contributing |
+| `fiddler-classic-alternative.md` | For people leaving Fiddler Classic: the license change, what carries over, how to switch, FAQ |
 | `compare.md` | VioLens compared with other web debuggers. Not published yet (`published: false`) until it's fact-checked |
 | `how-to/` | Short how-to guides; a page with `howto: true` and an `order` is listed on `/how-to/` automatically |
 | `privacy.md` | Privacy policy (linked from the footer, the Download page and Microsoft submissions). Update it if the app or site ever starts sending data anywhere |

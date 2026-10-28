@@ -6,7 +6,7 @@ layout: page
 published: false
 title: Compare web debuggers
 seo_title: "Fiddler Alternatives Compared: Charles, mitmproxy, HTTP Toolkit"
-description: An honest comparison of HTTPS debugging proxies for anyone leaving Fiddler Classic, covering price, licence, platforms, HTTP/2 and scripting.
+description: An honest comparison of HTTPS debugging proxies for anyone leaving Fiddler Classic, covering price, license, platforms, HTTP/2 and scripting.
 ---
 
 # Fiddler Classic alternatives compared

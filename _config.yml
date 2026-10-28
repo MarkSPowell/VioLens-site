@@ -8,7 +8,7 @@ baseurl: ""
 
 # Pages at /download/, /guide/ and /about/ rather than /download.html.
 permalink: pretty
-description: A free, open source HTTPS debugging proxy for Windows and Mac, and an alternative to Fiddler Classic. Free for any use, under the MIT licence.
+description: A free, open source HTTPS debugging proxy for Windows and Mac, and an alternative to Fiddler Classic. Free for any use, under the MIT license.
 repository_url: https://github.com/MarkSPowell/VioLens
 releases_url: https://github.com/MarkSPowell/VioLens/releases
 discord_url: https://discord.gg/NJfnGnn4PT

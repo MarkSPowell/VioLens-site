@@ -6,10 +6,10 @@ description: Fiddler Classic is now non-commercial only. VioLens is a free, open
 faq:
   - q: Can I still use Fiddler Classic at work?
     a: |
-      Progress has changed Fiddler Classic's licence to allow non-commercial use only. It set September 17, 2026 as the deadline for commercial users to move to Fiddler Everywhere or stop using Fiddler Classic for work. [Progress's FAQ](https://www.telerik.com/fiddler/fiddler-classic/commercial-use) explains what it counts as commercial use. I'm not a lawyer, so check with whoever handles software licences where you work.
+      Progress has changed Fiddler Classic's license to allow non-commercial use only. It set September 17, 2026 as the deadline for commercial users to move to Fiddler Everywhere or stop using Fiddler Classic for work. [Progress's FAQ](https://www.telerik.com/fiddler/fiddler-classic/commercial-use) explains what it counts as commercial use. I'm not a lawyer, so check with whoever handles software licenses where you work.
   - q: Is VioLens free for commercial use?
     a: |
-      Yes. VioLens is released under the MIT licence, so you can use it for anything, at work or at home. There's no account, no subscription and no paid tier.
+      Yes. VioLens is released under the MIT license, so you can use it for anything, at work or at home. There's no account, no subscription and no paid tier.
   - q: Will my .saz files open in VioLens?
     a: |
       Yes. **File > Open SAZ** opens the sessions in a `.saz` file saved by Fiddler Classic, and **File > Save SAZ** writes them. VioLens also imports and exports HAR files. WebSocket messages are saved in HAR files but not in SAZ files yet.
@@ -41,7 +41,7 @@ faq:
 
 ## What changed with Fiddler Classic
 
-On August 3, 2026, Progress Software announced that Fiddler Classic's licence would allow non-commercial use only. Commercial users had until September 17, 2026 to move to Fiddler Everywhere, Progress's paid, subscription-based tool, or to stop using Fiddler Classic for work. Progress doesn't sell a commercial licence for Fiddler Classic itself. The details are on [Progress's commercial use page](https://www.telerik.com/fiddler/fiddler-classic/commercial-use).
+On August 3, 2026, Progress Software announced that Fiddler Classic's license would allow non-commercial use only. Commercial users had until September 17, 2026 to move to Fiddler Everywhere, Progress's paid, subscription-based tool, or to stop using Fiddler Classic for work. Progress doesn't sell a commercial license for Fiddler Classic itself. The details are on [Progress's commercial use page](https://www.telerik.com/fiddler/fiddler-classic/commercial-use).
 
 If you use Fiddler at work, you have a few options:
 
