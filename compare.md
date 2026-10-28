@@ -22,7 +22,7 @@ description: An honest comparison of HTTPS debugging proxies for anyone leaving 
 | **Source** | Open source (MIT) | Closed | Closed | Closed | Open source (MIT) | Open source (AGPL) | Closed |
 | **Platforms** | Windows, Mac (Apple silicon) | Windows | Windows, Mac, Linux | Windows, Mac, Linux | Windows, Mac, Linux | Windows, Mac, Linux | Mac, Windows, Linux |
 | **Interface** | Desktop app | Desktop app | Desktop app | Desktop app | Terminal, web UI and Python | Desktop app | Desktop app |
-| **HTTP/2** | Preview (off by default) | No | Yes | Yes | Yes, and HTTP/3 | Yes | Yes |
+| **HTTP/2** | Yes | No | Yes | Yes | Yes, and HTTP/3 | Yes | Yes |
 | **Runs FiddlerScript (CustomRules.js)** | Yes | Yes | No | No | No | No | No |
 | **Scripting and extending** | FiddlerScript, .NET extensions | FiddlerScript, .NET extensions | C# scripts (beta) | Rewrite and Map tools | Python add-ons | Rules (more in Pro) | JavaScript scripts |
 | **Embeddable engine** | Violens.ProxyCore (NuGet, free) | FiddlerCore (sold separately) | No | No | Python library | Open source libraries | No |

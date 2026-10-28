@@ -10,7 +10,7 @@ description: VioLens and violens.dev don't collect, store or share any personal 
 
 This policy covers the VioLens app (for Windows and macOS), the `Violens.ProxyCore` and `Violens.ProxyHost.Client` libraries, and this website, violens.dev. VioLens is an independent open source project, and "I" here means its maintainer.
 
-Last updated: October 26, 2026.
+Last updated: October 27, 2026.
 
 ## The VioLens app
 
@@ -18,7 +18,8 @@ VioLens doesn't collect, send or keep any information about you or how you use i
 
 - **No telemetry, analytics or crash reporting.** The app doesn't report usage, errors or anything else to me or to any other service.
 - **No accounts and no sign-up.** You don't need to give anyone your name or email address to download or use it.
-- **No update checks.** VioLens doesn't contact a server to check for new versions. You download new versions yourself.
+- **One update check, which you can turn off.** At start-up VioLens asks GitHub's public releases list whether a newer version is out. That request sends nothing about you or your traffic, only what any web request does (your IP address, and the VioLens version in the User-Agent). Turn it off by unticking **Help > Check for Updates at Start-up**. VioLens never downloads or installs anything itself; you download new versions yourself.
+- **Diagnostic info only goes where you paste it.** **Help > Copy Diagnostic Info** copies details for a bug report to your clipboard. It leaves out your computer's name, and nothing is sent unless you paste it somewhere yourself.
 - **Captured traffic stays on your computer.** The requests and responses VioLens shows are kept in memory while it runs. They're only written to disk when you save them yourself, for example with **File > Save SAZ** or **Export HAR**, and only to the place you choose. They're never uploaded anywhere.
 - **The root certificate is created on your computer.** The certificate and private key VioLens uses to decrypt HTTPS are generated on your machine and stay there. You can remove them at any time with **Tools > Remove Root Certificate**.
 - **Settings stay on your computer.** Your preferences and AutoResponder rules are saved in a local file (`preferences.json`). A proxy sign-in password you type in is kept only while VioLens is running and is never saved.
@@ -29,6 +30,7 @@ VioLens is a proxy, so it makes network connections on your behalf:
 
 - It forwards the requests your browsers, apps and devices send through it to the servers they were meant for, directly or through the upstream proxy you've set.
 - If your computer uses an automatic proxy configuration (PAC) script, VioLens downloads that script from the address your computer is set to use, just as a browser would.
+- Unless you've turned it off, it checks GitHub for a newer release at start-up, or when you choose **Help > Check for Updates** (see above).
 
 It makes no other connections.
 

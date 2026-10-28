@@ -77,8 +77,9 @@ xattr -dr com.apple.quarantine /Applications/VioLens.app
 
 These are the gaps you're most likely to run into:
 
-- HTTP/2 is a preview and off by default. Turn it on with **Use HTTP/2 with browsers (preview)** under **Tools > Connections**; [here's how]({{ '/how-to/debug-http2-traffic/' | relative_url }}). Without it, connections through VioLens use HTTP/1.1, which every site still accepts. HTTP/3 isn't supported.
-- Client certificates (mutual TLS) aren't sent yet, so a server that requires one will refuse the connection.
+- HTTP/2 is on by default, but has had real-world use on Windows only so far. If a site misbehaves, turn off **Use HTTP/2 with browsers** under **Tools > Connections** to check; [here's more]({{ '/how-to/debug-http2-traffic/' | relative_url }}). HTTP/3 isn't supported.
+- Only one client certificate (mutual TLS) at a time, chosen under **Tools > Connections**. Fiddler Classic's `ClientCertificate.cer` file and `https-Client-Certificate` flag aren't supported.
+- Captured bodies are kept in memory (up to 64 MB each). For long captures, use the **Keep** drop-down next to Start and Stop to hold only the newest sessions.
 - Plain HTTP upstream proxies work, with Negotiate, NTLM or Basic sign-in. SOCKS proxies and Digest sign-in don't yet.
 - A Fiddler Classic extension has to be rebuilt from its source (usually by adding one file). You can't drop in a compiled `.dll` as it is.
 - The Mac version has had less use than the Windows one.
