@@ -4,13 +4,13 @@ howto: true
 order: 6
 title: How to open Fiddler SAZ files, and convert them to HAR
 seo_title: "How to Open SAZ Files and Convert SAZ to HAR · VioLens"
-description: Open a .saz Fiddler session archive without Fiddler, on Windows or a Mac, and save it as a HAR file for browser developer tools and support teams.
-summary: "Open a .saz file without Fiddler, on Windows or a Mac, and save it as HAR."
+description: Open a .saz Fiddler session archive without Fiddler, on Windows, Mac or Linux, and save it as a HAR file for browser developer tools and support teams.
+summary: "Open a .saz file without Fiddler, on Windows, Mac or Linux, and save it as HAR."
 ---
 
 # How to open Fiddler SAZ files, and convert them to HAR
 
-<p class="lede">A <code>.saz</code> file is a Fiddler Session Archive: a zip of captured requests and responses. Someone may have sent you one to look at, or you may have years of them saved. VioLens opens them for free on Windows and on a Mac, and can save them as HAR.</p>
+<p class="lede">A <code>.saz</code> file is a Fiddler Session Archive: a zip of captured requests and responses. Someone may have sent you one to look at, or you may have years of them saved. VioLens opens them for free on Windows, Mac and Linux, and can save them as HAR.</p>
 
 ## Open a SAZ file
 
@@ -32,6 +32,8 @@ Bodies are saved decompressed, as text where they're text, and the timings are i
 ## Convert HAR to SAZ
 
 It works the other way too. Choose **File > Import HAR** to load a `.har` file, such as one exported from Chrome or Edge, then **File > Save SAZ**.
+
+The same goes for packet captures. **File > Import Packet Capture** reads the plain HTTP in a `.pcap` or `.pcapng` file from Wireshark or tcpdump, so you can save that as SAZ or HAR too. HTTPS in a packet capture is encrypted, so it's skipped.
 
 ## Before you share a capture
 

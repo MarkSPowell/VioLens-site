@@ -1,8 +1,8 @@
 ---
 layout: page
 title: A free Fiddler Classic alternative
-seo_title: "Free Fiddler Classic Alternative for Windows and Mac · VioLens"
-description: Fiddler Classic is now non-commercial only. VioLens is a free, open source alternative for Windows and Mac that opens SAZ files and runs CustomRules.js.
+seo_title: "Free Fiddler Classic Alternative for Windows, Mac and Linux"
+description: Fiddler Classic is now non-commercial only. VioLens is a free, open source alternative for Windows, Mac and Linux that opens SAZ files and runs CustomRules.js.
 faq:
   - q: Can I still use Fiddler Classic at work?
     a: |
@@ -16,15 +16,15 @@ faq:
   - q: Does my CustomRules.js work in VioLens?
     a: |
       VioLens loads FiddlerScript files like `CustomRules.js`, with `OnBeforeRequest`, `OnBeforeResponse`, Rules menu options, context-menu actions, extra columns and QuickExec commands. Load yours from **Tools > FiddlerScript**. If something in your script doesn't work, please [open an issue](https://github.com/MarkSPowell/VioLens/issues).
-  - q: Is there a Fiddler Classic for Mac?
+  - q: Is there a Fiddler Classic for Mac or Linux?
     a: |
-      No. Fiddler Classic only runs on Windows. VioLens runs on both Windows and Apple silicon Macs (macOS 11 or later), with the same features on each.
+      No. Fiddler Classic only runs on Windows. VioLens runs on Windows, Apple silicon Macs (macOS 11 or later) and 64-bit Linux, with the same features on each.
   - q: Can I keep using my Fiddler extensions?
     a: |
-      Usually, if you have the extension's source. It can be rebuilt for VioLens with small changes, often just removing its `using Fiddler;` lines, and then it runs on Windows and Mac. A compiled Fiddler `.dll` can't be dropped in as it is. Extensions that rely on old Windows Forms controls can run in VioLens's separate Legacy Extension Host on Windows.
+      Usually, if you have the extension's source. It can be rebuilt for VioLens with small changes, often just removing its `using Fiddler;` lines, and then it runs on Windows, Mac and Linux. A compiled Fiddler `.dll` can't be dropped in as it is. Extensions that rely on old Windows Forms controls can run in VioLens's separate Legacy Extension Host on Windows.
   - q: What doesn't VioLens do yet?
     a: |
-      It can't use SOCKS upstream proxies or Digest proxy sign-in, and it sends only one client certificate (mutual TLS) at a time, without support for Fiddler's `ClientCertificate.cer` file. The Mac version has had less use than the Windows one. The [Download page](/download/#whats-not-there-yet) lists the gaps.
+      It can't use SOCKS upstream proxies or Digest proxy sign-in, and it sends only one client certificate (mutual TLS) at a time, without support for Fiddler's `ClientCertificate.cer` file. The Mac and Linux versions have had less use than the Windows one. The [Download page](/download/#whats-not-there-yet) lists the gaps.
   - q: Is VioLens made by Progress or Telerik?
     a: |
       No. VioLens is an independent open source project, written from scratch. It isn't affiliated with or endorsed by Progress Software or Telerik.
@@ -32,7 +32,7 @@ faq:
 
 # A free, open source Fiddler Classic alternative
 
-<p class="lede">Fiddler Classic is now for non-commercial use only. VioLens is an open source debugging proxy for Windows and Mac that works the way Fiddler Classic does: it opens your SAZ files, runs your CustomRules.js, and takes the same AutoResponder rules and QuickExec commands. It's free and MIT licensed, so you can use it at work.</p>
+<p class="lede">Fiddler Classic is now for non-commercial use only. VioLens is an open source debugging proxy for Windows, Mac and Linux that works the way Fiddler Classic does: it opens your SAZ files, runs your CustomRules.js, and takes the same AutoResponder rules and QuickExec commands. It's free and MIT licensed, so you can use it at work.</p>
 
 <div class="buttons">
   <a class="button primary" href="{{ '/download/' | relative_url }}">Download VioLens</a>
@@ -69,9 +69,12 @@ I used Fiddler for more than 15 years, and I built VioLens to replace it in my o
 | Allow remote computers to connect | The same setting, with the certificate at `http://violens/` |
 | Gateway and upstream proxies | Upstream proxies, PAC scripts, and Negotiate, NTLM or Basic sign-in |
 | Extensions | .NET extensions, ported from their source |
+| FiddlerCap | [VioLens Capture]({{ '/how-to/get-a-capture-from-a-customer/' | relative_url }}), a one-window app for someone else to record a capture |
+| ExecAction.exe | `violens-exec`, to drive a capture from scripts |
+| Import packet captures | **File > Import Packet Capture** (`.pcap`, `.pcapng`) |
 | FiddlerCore | [`Violens.ProxyCore`]({{ '/developers/' | relative_url }}), on NuGet |
 
-It also does a few things Fiddler Classic never did. It runs on a Mac, captures HTTP/2, shows live WebSocket messages, decompresses Brotli and zstd, and warns about cookies today's browsers will refuse.
+It also does a few things Fiddler Classic never did. It runs on Mac and Linux, captures HTTP/2, shows live WebSocket messages, decompresses Brotli and zstd, and warns about cookies today's browsers will refuse.
 
 ## Moving from Fiddler Classic to VioLens
 

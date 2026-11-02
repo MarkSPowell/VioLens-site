@@ -2,7 +2,7 @@
 layout: default
 title: VioLens
 seo_title: "VioLens: Free Fiddler Classic Alternative and HTTPS Debugger"
-description: Free, open source HTTPS debugging proxy for Windows and Mac. A Fiddler Classic alternative that opens your SAZ files and runs your FiddlerScript. MIT license.
+description: Free, open source HTTPS debugging proxy for Windows, Mac and Linux. A Fiddler Classic alternative that opens your SAZ files and runs your FiddlerScript.
 ---
 <script type="application/ld+json">
 {
@@ -10,13 +10,13 @@ description: Free, open source HTTPS debugging proxy for Windows and Mac. A Fidd
   "@type": "SoftwareApplication",
   "name": "VioLens",
   "alternateName": "CLeARINET",
-  "description": "A free, open source HTTP and HTTPS debugging proxy for Windows and macOS, and an alternative to Fiddler Classic.",
+  "description": "A free, open source HTTP and HTTPS debugging proxy for Windows, macOS and Linux, and an alternative to Fiddler Classic.",
   "url": "{{ site.url }}/",
   "downloadUrl": "{{ site.releases_url }}/latest",
   "image": "{{ '/assets/social-card.png' | absolute_url }}",
   "applicationCategory": "DeveloperApplication",
   "applicationSubCategory": "Web debugging proxy",
-  "operatingSystem": "Windows 10, Windows 11, macOS 11 or later",
+  "operatingSystem": "Windows 10, Windows 11, macOS 11 or later, Linux",
   "license": "https://opensource.org/licenses/MIT",
   "isAccessibleForFree": true,
   "codeRepository": "{{ site.repository_url }}",
@@ -28,13 +28,13 @@ description: Free, open source HTTPS debugging proxy for Windows and Mac. A Fidd
     <div>
       <span class="eyebrow">Free web debugging proxy · Open source · Preview</span>
       <h1>See inside your <span class="accent">HTTP and HTTPS</span> traffic.</h1>
-      <p class="lede">VioLens is an open source HTTPS debugger for Windows and Mac. I built it to replace Fiddler Classic, so if you've used Fiddler you'll know your way around: every request your browsers and apps make shows up in a list, and you can pause them, change them and send them again. It's free, including at work.</p>
+      <p class="lede">VioLens is an open source HTTPS debugger for Windows, Mac and Linux. I built it to replace Fiddler Classic, so if you've used Fiddler you'll know your way around: every request your browsers and apps make shows up in a list, and you can pause them, change them and send them again. It's free, including at work.</p>
       <div class="buttons">
         <a class="button primary" href="{{ '/download/' | relative_url }}">Download</a>
         <a class="button" href="{{ '/guide/' | relative_url }}">Read the User Guide</a>
         <a class="button" href="{{ site.repository_url }}">View on GitHub</a>
       </div>
-      <p class="note">It's a preview. It runs on 64-bit Windows 10 and 11, and on Apple silicon Macs with macOS 11 or later.</p>
+      <p class="note">It's a preview. It runs on 64-bit Windows 10 and 11, Apple silicon Macs with macOS 11 or later, and 64-bit Linux.</p>
     </div>
     <img class="hero-emblem" src="{{ '/assets/emblem.png' | relative_url }}" alt="The VioLens emblem: a fiddle and bow under a magnifying glass that shows HTTPS" width="226" height="192">
   </div>
@@ -66,7 +66,7 @@ description: Free, open source HTTPS debugging proxy for Windows and Mac. A Fidd
       </div>
       <div class="card">
         <h3>Shows you what was sent</h3>
-        <p>Headers, Raw, JSON, WebForms, images, Hex and Cookies views, plus every WebSocket message. gzip, deflate, Brotli and zstd bodies are decompressed for you.</p>
+        <p>Headers, Raw, JSON, WebForms, images, Hex and Cookies views, plus every WebSocket message. JSON, CBOR and MessagePack open as a tree, and Markdown is rendered. gzip, deflate, Brotli and zstd bodies are decompressed for you.</p>
       </div>
       <div class="card">
         <h3>Breakpoints and AutoResponder</h3>
@@ -86,11 +86,15 @@ description: Free, open source HTTPS debugging proxy for Windows and Mac. A Fidd
       </div>
       <div class="card">
         <h3>QuickExec, scripts and extensions</h3>
-        <p>Type commands like <code>?login</code> or <code>bpu /api</code>. Load a CustomRules.js-style script to change traffic on the way through, or add .NET extensions.</p>
+        <p>Type commands like <code>?login</code> or <code>bpu /api</code>. Load a CustomRules.js-style script to change traffic on the way through, or add .NET extensions. Test scripts can drive a capture with <code>violens-exec</code>.</p>
       </div>
       <div class="card">
         <h3>Works on a company network</h3>
-        <p>Corporate proxies, PAC scripts and proxy sign-in all work, and VioLens can answer a server that asks for a client certificate. Phones and other devices can go through it too.</p>
+        <p>Corporate proxies, PAC scripts and proxy sign-in all work, and VioLens can answer a server that asks for a client certificate. Phones and other devices can go through it too, and IT can lock settings for everyone with Group Policy or a policy file.</p>
+      </div>
+      <div class="card">
+        <h3>Captures from other people</h3>
+        <p>Send a customer VioLens Capture, a one-window app that records a problem as a SAZ file. Or open the plain HTTP in a Wireshark or tcpdump packet capture.</p>
       </div>
     </div>
   </div>
@@ -108,6 +112,7 @@ description: Free, open source HTTPS debugging proxy for Windows and Mac. A Fidd
           <li>FiddlerScript: OnBeforeRequest, OnBeforeResponse, Rules menu options, context actions and columns.</li>
           <li>Extensions can be ported from their source with few changes. Three ported ones come with the installers.</li>
           <li>Breakpoints, AutoResponder rules, Composer, Replay, Find, TextWizard and the QuickExec box.</li>
+          <li>FiddlerCap and ExecAction.exe have their own versions: VioLens Capture and <code>violens-exec</code>.</li>
         </ul>
       </div>
       <div class="panel">
@@ -118,7 +123,7 @@ description: Free, open source HTTPS debugging proxy for Windows and Mac. A Fidd
           <li>HTTP/2 between browsers, VioLens and servers, on by default. <a href="{{ '/how-to/debug-http2-traffic/' | relative_url }}">Here's how it works</a>.</li>
           <li>Live WebSocket messages, with compressed and fragmented ones put back together.</li>
           <li>HAR import and export, zstd and Brotli, and cookie warnings based on today's browser rules.</li>
-          <li>It runs on a Mac as well as Windows (it's built on .NET 10 and Avalonia).</li>
+          <li>It runs on Mac and Linux as well as Windows (it's built on .NET 10 and Avalonia). <a href="{{ '/how-to/capture-https-traffic-on-linux/' | relative_url }}">Here's how to set it up on Linux</a>.</li>
         </ul>
       </div>
     </div>

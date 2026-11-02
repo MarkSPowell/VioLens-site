@@ -20,7 +20,7 @@ description: An honest comparison of HTTPS debugging proxies for anyone leaving 
 | **Price** | Free | Free for non-commercial use only | Paid yearly subscription per user | $50 per user, one-time (30-day trial) | Free | Free, with a paid Pro subscription | From $89, one-time (limited free trial) |
 | **Free for work** | Yes | No | No | No | Yes | Basic features | No |
 | **Source** | Open source (MIT) | Closed | Closed | Closed | Open source (MIT) | Open source (AGPL) | Closed |
-| **Platforms** | Windows, Mac (Apple silicon) | Windows | Windows, Mac, Linux | Windows, Mac, Linux | Windows, Mac, Linux | Windows, Mac, Linux | Mac, Windows, Linux |
+| **Platforms** | Windows, Mac (Apple silicon), Linux | Windows | Windows, Mac, Linux | Windows, Mac, Linux | Windows, Mac, Linux | Windows, Mac, Linux | Mac, Windows, Linux |
 | **Interface** | Desktop app | Desktop app | Desktop app | Desktop app | Terminal, web UI and Python | Desktop app | Desktop app |
 | **HTTP/2** | Yes | No | Yes | Yes | Yes, and HTTP/3 | Yes | Yes |
 | **Runs FiddlerScript (CustomRules.js)** | Yes | Yes | No | No | No | No | No |
@@ -35,7 +35,7 @@ VioLens, Fiddler Classic and Fiddler Everywhere all open the `.saz` files Fiddle
 
 ### VioLens
 
-Pick VioLens if you liked how Fiddler Classic worked and want to keep working that way for free, including at work. Your SAZ files, CustomRules.js, AutoResponder rules, QuickExec commands and keyboard habits carry over, and it runs on a Mac too. It's still a preview, though: it sends only one client certificate at a time, can't use SOCKS proxies, and the Mac version has had less use. [Moving from Fiddler Classic]({{ '/fiddler-classic-alternative/' | relative_url }}) explains what carries over.
+Pick VioLens if you liked how Fiddler Classic worked and want to keep working that way for free, including at work. Your SAZ files, CustomRules.js, AutoResponder rules, QuickExec commands and keyboard habits carry over, and it runs on Mac and Linux too. It's still a preview, though: it sends only one client certificate at a time, can't use SOCKS proxies, and the Mac and Linux versions have had less use. [Moving from Fiddler Classic]({{ '/fiddler-classic-alternative/' | relative_url }}) explains what carries over.
 
 ### Fiddler Everywhere
 

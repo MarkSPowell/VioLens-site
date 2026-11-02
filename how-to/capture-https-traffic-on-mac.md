@@ -47,5 +47,5 @@ Click **Stop**. VioLens puts your Mac's proxy settings back the way they were. T
 - **Your company network uses a proxy.** VioLens goes through it automatically, PAC scripts included. See [Connections]({{ '/guide/' | relative_url }}#connections-upstream-proxy-and-other-devices) in the User Guide.
 
 <div class="related" markdown="1">
-**Related:** [See iPhone and Android traffic]({{ '/how-to/debug-iphone-android-traffic/' | relative_url }}) · [Edit and replay requests]({{ '/how-to/edit-and-replay-http-requests/' | relative_url }}) · [Switching from Fiddler Classic]({{ '/fiddler-classic-alternative/' | relative_url }})
+**Related:** [Capture HTTPS on Linux]({{ '/how-to/capture-https-traffic-on-linux/' | relative_url }}) · [See iPhone and Android traffic]({{ '/how-to/debug-iphone-android-traffic/' | relative_url }}) · [Edit and replay requests]({{ '/how-to/edit-and-replay-http-requests/' | relative_url }}) · [Switching from Fiddler Classic]({{ '/fiddler-classic-alternative/' | relative_url }})
 </div>

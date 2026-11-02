@@ -8,9 +8,9 @@ description: VioLens and violens.dev don't collect, store or share any personal 
 
 <p class="lede">The short version: VioLens doesn't collect any data about you, and neither does this website. Nothing you capture with VioLens is sent to me or anyone else.</p>
 
-This policy covers the VioLens app (for Windows and macOS), the `Violens.ProxyCore` and `Violens.ProxyHost.Client` libraries, and this website, violens.dev. VioLens is an independent open source project, and "I" here means its maintainer.
+This policy covers the VioLens app (for Windows, macOS and Linux), VioLens Capture, `violens-exec`, the `Violens.ProxyCore` and `Violens.ProxyHost.Client` libraries, and this website, violens.dev. VioLens is an independent open source project, and "I" here means its maintainer.
 
-Last updated: October 27, 2026.
+Last updated: November 2, 2026.
 
 ## The VioLens app
 
@@ -22,7 +22,10 @@ VioLens doesn't collect, send or keep any information about you or how you use i
 - **Diagnostic info only goes where you paste it.** **Help > Copy Diagnostic Info** copies details for a bug report to your clipboard. It leaves out your computer's name, and nothing is sent unless you paste it somewhere yourself.
 - **Captured traffic stays on your computer.** The requests and responses VioLens shows are kept in memory while it runs. They're only written to disk when you save them yourself, for example with **File > Save SAZ** or **Export HAR**, and only to the place you choose. They're never uploaded anywhere.
 - **The root certificate is created on your computer.** The certificate and private key VioLens uses to decrypt HTTPS are generated on your machine and stay there. You can remove them at any time with **Tools > Remove Root Certificate**.
-- **Settings stay on your computer.** Your preferences and AutoResponder rules are saved in a local file (`preferences.json`). A proxy sign-in password you type in is kept only while VioLens is running and is never saved.
+- **`violens-exec` only works on your computer.** Scripts send it commands over a local connection that only your own account can open. Nothing listens on the network.
+- **Previews don't go online unless you ask.** The WebView tab's **Preview in Browser** writes a copy of the page to your temp folder, with scripts blocked, and deletes it after a day. Your browser only fetches the page's images and styles if you check **Load images and styles from the site**.
+- **VioLens Capture works the same way.** It saves a capture only where you choose, and never sends it anywhere. Sending the file to someone is up to you.
+- **Settings stay on your computer.** Your preferences and AutoResponder rules are saved in a local file (`preferences.json`). A proxy sign-in password you type in is kept only while VioLens is running and is never saved. If your organization sets VioLens's settings by policy, VioLens reads them from your computer, not from a server.
 
 ### The network connections VioLens makes
 

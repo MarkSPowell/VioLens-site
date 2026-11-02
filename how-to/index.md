@@ -2,7 +2,7 @@
 layout: page
 title: How-to guides
 seo_title: "HTTPS Debugging How-to Guides · VioLens"
-description: Step-by-step guides to debugging web traffic with VioLens, a free HTTPS debugging proxy - on a Mac, on phones, with WebSockets, mocks and SAZ files.
+description: Step-by-step guides to debugging web traffic with VioLens, a free HTTPS debugging proxy - on a Mac or Linux, on phones, with WebSockets, mocks and SAZ files.
 ---
 
 # How-to guides
