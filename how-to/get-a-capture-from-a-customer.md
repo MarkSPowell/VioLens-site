@@ -10,7 +10,7 @@ summary: "Send someone VioLens Capture, a one-window app, and they can record th
 
 # How to get a capture from a customer
 
-<p class="lede">When a problem only happens on someone else's computer, you need their traffic, not yours. VioLens Capture is a separate app with one window and nothing to set up, so anyone can record a capture and send it to you. If you used Fiddler's FiddlerCap, it works the same way.</p>
+<p class="lede">Some problems only happen on someone else's computer. VioLens Capture lets them record the traffic for you. It's a separate app with one window and nothing to set up. If you ever sent someone FiddlerCap, it's the same idea.</p>
 
 ## 1. Send them VioLens Capture
 
@@ -32,7 +32,7 @@ When they close the window, VioLens Capture removes the certificate it added (un
 
 In VioLens, choose **File > Open SAZ** and pick the file. The sessions appear as if you'd captured them yourself, with their timings.
 
-## Things worth telling them
+## What to tell them
 
 - **A capture can contain passwords and cookies.** VioLens Capture reminds them of this. Ask them to sign out of anything they don't need first, and only send the file to you.
 - **It only records.** No breakpoints, rules, scripts or extensions run, so it can't change their traffic.

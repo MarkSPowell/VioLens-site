@@ -40,7 +40,7 @@ description: Download VioLens, a free and open source HTTPS debugging proxy, for
     <ul>
       <li>An AppImage: make it executable and run it. Or a <code>.tar.gz</code> to unpack anywhere.</li>
       <li>Install <code>certutil</code> first (<code>libnss3-tools</code> on Debian and Ubuntu, <code>nss-tools</code> on Fedora). <a href="{{ '/how-to/capture-https-traffic-on-linux/' | relative_url }}">Setup steps</a>.</li>
-      <li>Linux support is the newest, so please report anything that doesn't work.</li>
+      <li>Linux is the newest platform, so please report anything that doesn't work.</li>
     </ul>
     <a class="button primary" href="{{ site.releases_url }}/latest">Get the Linux packages</a>
     <p>Download <code>VioLens-<em>version</em>-x86_64.AppImage</code> or <code>VioLens-<em>version</em>-linux-x64.tar.gz</code> from the latest release.</p>
@@ -58,7 +58,7 @@ description: Download VioLens, a free and open source HTTPS debugging proxy, for
 ## The first time you run it
 
 1. Click **Start** to begin capturing.
-2. VioLens asks you to trust a root certificate called `DO_NOT_TRUST_ViolensRoot`. It's created on your computer and only used there, and it's what lets VioLens read HTTPS traffic. On Windows you'll see Windows' own prompt. On a Mac, VioLens asks you first, then adds it to your login keychain (macOS may ask for your password). On Linux, VioLens asks first, then adds it to your browsers' certificate databases.
+2. VioLens asks you to trust a root certificate called `DO_NOT_TRUST_ViolensRoot`. It's created on your computer and only used there, and it's what lets VioLens read HTTPS traffic. On Windows you'll see Windows' own prompt. On a Mac or Linux, VioLens asks you itself. A Mac then keeps it in your login keychain (macOS may ask for your password), and on Linux it goes into your browsers' certificate databases.
 3. Browse as usual and the requests appear in the list. Click **Stop** when you're done, and your proxy settings go back to how they were.
 
 Nothing VioLens captures leaves your computer unless you save or send it yourself. The [User Guide]({{ '/guide/' | relative_url }}) covers everything else.
@@ -93,12 +93,12 @@ xattr -dr com.apple.quarantine /Applications/VioLens.app
 
 These are the gaps you're most likely to run into:
 
-- HTTP/2 is on by default, but has had real-world use on Windows only so far. If a site misbehaves, turn off **Use HTTP/2 with browsers** under **Tools > Connections** to check; [here's more]({{ '/how-to/debug-http2-traffic/' | relative_url }}). HTTP/3 isn't supported.
+- HTTP/2 is on by default, but has had real-world use on Windows only so far. If a site misbehaves, turn off **Use HTTP/2 with browsers** under **Tools > Connections** to check. [More about HTTP/2]({{ '/how-to/debug-http2-traffic/' | relative_url }}). HTTP/3 isn't supported.
 - Only one client certificate (mutual TLS) at a time, chosen under **Tools > Connections**. Fiddler Classic's `ClientCertificate.cer` file and `https-Client-Certificate` flag aren't supported.
 - Captured bodies are kept in memory (up to 64 MB each). For long captures, use the **Keep** drop-down next to Start and Stop to hold only the newest sessions.
 - Plain HTTP upstream proxies work, with Negotiate, NTLM or Basic sign-in. SOCKS proxies and Digest sign-in don't yet.
 - A Fiddler Classic extension has to be rebuilt from its source (usually by adding one file). You can't drop in a compiled `.dll` as it is.
-- Linux is new and hasn't had much real-world use yet. It sets the proxy on GNOME and KDE Plasma only, and command-line tools such as curl need the certificate added to the system by hand ([here's how]({{ '/how-to/capture-https-traffic-on-linux/' | relative_url }}#command-line-tools)).
+- Linux is new and hasn't had much real-world use yet. It sets the proxy on GNOME and KDE Plasma only, and command-line tools such as curl need the certificate added to the system by hand ([the commands]({{ '/how-to/capture-https-traffic-on-linux/' | relative_url }}#command-line-tools)).
 - The Mac version has had less use than the Windows one.
 - VioLens Capture is packaged for Windows only so far.
 

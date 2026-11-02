@@ -10,7 +10,7 @@ summary: "Open a .saz file without Fiddler, on Windows, Mac or Linux, and save i
 
 # How to open Fiddler SAZ files, and convert them to HAR
 
-<p class="lede">A <code>.saz</code> file is a Fiddler Session Archive: a zip of captured requests and responses. Someone may have sent you one to look at, or you may have years of them saved. VioLens opens them for free on Windows, Mac and Linux, and can save them as HAR.</p>
+<p class="lede">A <code>.saz</code> file is a Fiddler Session Archive: a zip of captured requests and responses. Someone may have sent you one to look at, or you may have years of them saved. VioLens opens them for free, on any of your computers, and can save them as HAR.</p>
 
 ## Open a SAZ file
 

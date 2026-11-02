@@ -10,7 +10,7 @@ summary: "Install VioLens on Linux, trust its certificate in your browsers, and 
 
 # How to capture and decrypt HTTPS traffic on Linux
 
-<p class="lede">Fiddler Classic never ran on Linux. VioLens does, with the same session list, inspectors, breakpoints and AutoResponder as on Windows and Mac. Here's how to set it up.</p>
+<p class="lede">VioLens works the same on Linux as on Windows and Mac: the session list, inspectors, breakpoints and AutoResponder are all there. You need one extra package before you start.</p>
 
 You'll need 64-bit (x86-64) Linux. VioLens sets the system proxy for you on GNOME, KDE Plasma and desktops built on them, such as Cinnamon and Budgie. Linux support is new, so if something doesn't work, please [open an issue]({{ site.repository_url }}/issues).
 

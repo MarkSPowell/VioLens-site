@@ -24,7 +24,7 @@ VioLens doesn't collect, send or keep any information about you or how you use i
 - **The root certificate is created on your computer.** The certificate and private key VioLens uses to decrypt HTTPS are generated on your machine and stay there. You can remove them at any time with **Tools > Remove Root Certificate**.
 - **`violens-exec` only works on your computer.** Scripts send it commands over a local connection that only your own account can open. Nothing listens on the network.
 - **Previews don't go online unless you ask.** The WebView tab's **Preview in Browser** writes a copy of the page to your temp folder, with scripts blocked, and deletes it after a day. Your browser only fetches the page's images and styles if you check **Load images and styles from the site**.
-- **VioLens Capture works the same way.** It saves a capture only where you choose, and never sends it anywhere. Sending the file to someone is up to you.
+- **VioLens Capture doesn't send anything either.** It saves a capture where you choose, and that's all. Whether to send the file to someone is up to you.
 - **Settings stay on your computer.** Your preferences and AutoResponder rules are saved in a local file (`preferences.json`). A proxy sign-in password you type in is kept only while VioLens is running and is never saved. If your organization sets VioLens's settings by policy, VioLens reads them from your computer, not from a server.
 
 ### The network connections VioLens makes

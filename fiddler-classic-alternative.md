@@ -32,7 +32,7 @@ faq:
 
 # A free, open source Fiddler Classic alternative
 
-<p class="lede">Fiddler Classic is now for non-commercial use only. VioLens is an open source debugging proxy for Windows, Mac and Linux that works the way Fiddler Classic does: it opens your SAZ files, runs your CustomRules.js, and takes the same AutoResponder rules and QuickExec commands. It's free and MIT licensed, so you can use it at work.</p>
+<p class="lede">Fiddler Classic is now for non-commercial use only. VioLens is an open source debugging proxy that works the way Fiddler Classic does, and it runs on Mac and Linux as well as Windows: it opens your SAZ files, runs your CustomRules.js, and takes the same AutoResponder rules and QuickExec commands. It's free and MIT licensed, so you can use it at work.</p>
 
 <div class="buttons">
   <a class="button primary" href="{{ '/download/' | relative_url }}">Download VioLens</a>
