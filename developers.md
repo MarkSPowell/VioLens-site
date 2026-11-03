@@ -78,12 +78,12 @@ it (empty means every server that asks); a session's
 ## Installing
 
 ```
-dotnet add package Violens.ProxyCore --prerelease
+dotnet add package Violens.ProxyCore
 ```
 
-Versions match VioLens releases (0.2.0-preview.1 and so on). While the
-version starts with 0, a new minor version may change the public API. See
-[Versions and compatibility](#versions-and-compatibility).
+Versions match VioLens releases. Add `--prerelease` for a release
+candidate such as 1.0.0-rc.1. From 1.0 the public API follows semantic
+versioning; see [Versions and compatibility](#versions-and-compatibility).
 
 ## A minimal app
 
@@ -530,13 +530,18 @@ Framework process.
 ## Versions and compatibility
 
 - The package version is the VioLens version it shipped with.
-- In 0.x, a minor version (0.2 to 0.3) may change the public API, and a
-  patch version (0.2.0 to 0.2.1) only fixes things. Each release's notes
-  have a "ProxyCore changes" section.
-- From 1.0, only a major version (1.x to 2.0) breaks anything.
+- From 1.0 the public API follows semantic versioning: a minor version
+  (1.0 to 1.1) only adds things, a patch version only fixes them, and
+  only a major version (1.x to 2.0) removes or changes anything. Each
+  release's notes have a "ProxyCore changes" section.
+- The API is checked by a test that compares it with a recorded list
+  (`tests/Violens.ProxyCore.Tests/PublicApi`), so a change can't slip
+  into a release unnoticed.
+- HTTP/2 uses the same `CapturedRequest` and `CapturedResponse` as
+  HTTP/1.1. Its `HttpVersion` is `HTTP/2`, the `:authority` becomes the
+  `Host` header, and trailers are in `CapturedResponse.Trailers`.
 - Pin a version and move up when you're ready. NuGet never upgrades on its
   own, and a published version never changes.
-- Expect HTTP/2 to change how requests are represented before 1.0.
 
 ProxyCore is MIT licensed, like the rest of VioLens. If you have questions
 or hit a problem,

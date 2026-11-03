@@ -7,7 +7,7 @@ description: Download VioLens, a free and open source HTTPS debugging proxy, for
 
 # Download VioLens
 
-<p class="lede">VioLens is still a preview, but it's usable for everyday debugging. Downloads come from the releases page on GitHub, along with notes on what changed.</p>
+<p class="lede">This is the release candidate for VioLens 1.0. Everything planned for 1.0 is in. What's left is more testing on Macs and Linux desktops, so reports from those are especially welcome. Downloads come from the releases page on GitHub, along with notes on what changed.</p>
 
 <div class="downloads">
   <section class="download">

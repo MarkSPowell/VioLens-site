@@ -35,7 +35,7 @@ VioLens, Fiddler Classic and Fiddler Everywhere all open the `.saz` files Fiddle
 
 ### VioLens
 
-Pick VioLens if you liked how Fiddler Classic worked and want to keep working that way for free, including at work. Your SAZ files, CustomRules.js, AutoResponder rules, QuickExec commands and keyboard habits carry over, and it runs on Mac and Linux too. It's still a preview, though: it sends only one client certificate at a time, can't use SOCKS proxies, and the Mac and Linux versions have had less use. [Moving from Fiddler Classic]({{ '/fiddler-classic-alternative/' | relative_url }}) explains what carries over.
+Pick VioLens if you liked how Fiddler Classic worked and want to keep working that way for free, including at work. Your SAZ files, CustomRules.js, AutoResponder rules, QuickExec commands and keyboard habits carry over, and it runs on Mac and Linux too. It's at the 1.0 release candidate, and it still has gaps: it sends only one client certificate at a time, can't use SOCKS proxies, and the Mac and Linux versions have had less use. [Moving from Fiddler Classic]({{ '/fiddler-classic-alternative/' | relative_url }}) explains what carries over.
 
 ### Fiddler Everywhere
 

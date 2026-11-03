@@ -26,7 +26,7 @@ description: Free, open source HTTPS debugging proxy for Windows, Mac and Linux.
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="eyebrow">Free web debugging proxy · Open source · Preview</span>
+      <span class="eyebrow">Free web debugging proxy · Open source · 1.0 release candidate</span>
       <h1>See inside your <span class="accent">HTTP and HTTPS</span> traffic.</h1>
       <p class="lede">VioLens is an open source HTTPS debugger. I built it to replace Fiddler Classic, so if you've used Fiddler you'll know your way around: every request your browsers and apps make shows up in a list, and you can pause them, change them and send them again. It's free, including at work, and it runs on Windows, Mac and Linux.</p>
       <div class="buttons">
@@ -34,7 +34,7 @@ description: Free, open source HTTPS debugging proxy for Windows, Mac and Linux.
         <a class="button" href="{{ '/guide/' | relative_url }}">Read the User Guide</a>
         <a class="button" href="{{ site.repository_url }}">View on GitHub</a>
       </div>
-      <p class="note">It's a preview. It runs on 64-bit Windows 10 and 11, Apple silicon Macs with macOS 11 or later, and 64-bit Linux.</p>
+      <p class="note">This is the release candidate for 1.0. It runs on 64-bit Windows 10 and 11, Apple silicon Macs with macOS 11 or later, and 64-bit Linux.</p>
     </div>
     <img class="hero-emblem" src="{{ '/assets/emblem.png' | relative_url }}" alt="The VioLens emblem: a fiddle and bow under a magnifying glass that shows HTTPS" width="226" height="192">
   </div>
@@ -137,7 +137,7 @@ description: Free, open source HTTPS debugging proxy for Windows, Mac and Linux.
 <section class="section">
   <div class="wrap">
     <h2>Building your own tool?</h2>
-    <p class="intro">The proxy engine is a separate .NET library, <code>Violens.ProxyCore</code>, published on NuGet with each release. You can build your own debugger, capture tool or test harness on it, with Fiddler-style hooks such as OnBeforeRequest, AutoTamper, session flags and breakpoints. If your app is still on .NET Framework, <code>Violens.ProxyHost.Client</code> runs the engine in a small process of its own and talks to it for you.</p>
+    <p class="intro">The proxy engine is a separate .NET library, <code>Violens.ProxyCore</code>, published on NuGet with each release. You can build your own debugger, capture tool or test harness on it, with Fiddler-style hooks such as OnBeforeRequest, AutoTamper, session flags and breakpoints. If your app is still on .NET Framework, <code>Violens.ProxyHost.Client</code> runs the engine in a small process of its own and talks to it for you. Its API is frozen for 1.0, so updates after that won't break your code until 2.0.</p>
     <div class="buttons">
       <a class="button" href="{{ '/developers/' | relative_url }}">Read the Embedding ProxyCore guide</a>
     </div>
@@ -148,9 +148,9 @@ description: Free, open source HTTPS debugging proxy for Windows, Mac and Linux.
   <div class="wrap">
     <div class="panel" style="text-align:center; padding: 36px 24px;">
       <h2 style="margin-bottom:8px;">Free, and MIT licensed</h2>
-      <p class="intro" style="margin: 0 auto 20px;">You can use VioLens for anything, at work or at home. Give the preview a try, and if something breaks, I'd like to hear about it.</p>
+      <p class="intro" style="margin: 0 auto 20px;">You can use VioLens for anything, at work or at home. 1.0 is close, so this is a good time to try it. If something breaks, I'd like to hear about it before the final release.</p>
       <div class="buttons" style="justify-content:center;">
-        <a class="button primary" href="{{ '/download/' | relative_url }}">Download the preview</a>
+        <a class="button primary" href="{{ '/download/' | relative_url }}">Download VioLens</a>
         <a class="button" href="{{ site.repository_url }}/issues">Report an issue</a>
       </div>
     </div>
