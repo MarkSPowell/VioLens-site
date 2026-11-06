@@ -10,7 +10,7 @@ description: VioLens and violens.dev don't collect, store or share any personal 
 
 This policy covers the VioLens app (for Windows, macOS and Linux), VioLens Capture, `violens-exec`, the `Violens.ProxyCore` and `Violens.ProxyHost.Client` libraries, and this website, violens.dev. VioLens is an independent open source project, and "I" here means its maintainer.
 
-Last updated: November 2, 2026.
+Last updated: November 6, 2026.
 
 ## The VioLens app
 
@@ -23,8 +23,10 @@ VioLens doesn't collect, send or keep any information about you or how you use i
 - **Captured traffic stays on your computer.** The requests and responses VioLens shows are kept in memory while it runs. They're only written to disk when you save them yourself, for example with **File > Save SAZ** or **Export HAR**, and only to the place you choose. They're never uploaded anywhere.
 - **The root certificate is created on your computer.** The certificate and private key VioLens uses to decrypt HTTPS are generated on your machine and stay there. You can remove them at any time with **Tools > Remove Root Certificate**.
 - **`violens-exec` only works on your computer.** Scripts send it commands over a local connection that only your own account can open. Nothing listens on the network.
-- **Previews don't go online unless you ask.** The WebView tab's **Preview in Browser** writes a copy of the page to your temp folder, with scripts blocked, and deletes it after a day. Your browser only fetches the page's images and styles if you check **Load images and styles from the site**.
+- **Previews don't go online unless you ask.** The WebView tab's **Preview in Browser** writes a copy of the page to a folder in your temp folder that only your account can open, with scripts blocked, and deletes it after a day. Your browser only fetches the page's images and styles if you check **Load images and styles from the site**.
 - **VioLens Capture doesn't send anything either.** It saves a capture where you choose, and that's all. Whether to send the file to someone is up to you.
+- **Your identity isn't lent out.** If you let phones or other computers use VioLens, it doesn't sign them in to your company's proxy as you, or send them your client certificate. On Windows and Linux the same goes for programs run by other accounts on your computer. (macOS can't tell VioLens which account a connection came from.)
+- **A client certificate only goes where you say.** A certificate usually has your name in it, so any site that asks for one could learn who you are. Until you list the hosts it's for, VioLens offers it to every server that asks, and shows a warning saying so.
 - **Settings stay on your computer.** Your preferences and AutoResponder rules are saved in a local file (`preferences.json`). A proxy sign-in password you type in is kept only while VioLens is running and is never saved. If your organization sets VioLens's settings by policy, VioLens reads them from your computer, not from a server.
 
 ### The network connections VioLens makes

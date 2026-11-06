@@ -12,7 +12,7 @@ summary: "Install VioLens on Linux, trust its certificate in your browsers, and 
 
 <p class="lede">VioLens works the same on Linux as on Windows and Mac: the session list, inspectors, breakpoints and AutoResponder are all there. You need one extra package before you start.</p>
 
-You'll need 64-bit (x86-64) Linux. VioLens sets the system proxy for you on GNOME, KDE Plasma and desktops built on them, such as Cinnamon and Budgie. Linux support is new, so if something doesn't work, please [open an issue]({{ site.repository_url }}/issues).
+You'll need 64-bit (x86-64) Linux. VioLens sets the system proxy for you on GNOME, KDE Plasma and desktops built on them, such as Cinnamon and Budgie. I've tested it on Ubuntu with GNOME. KDE Plasma should work too but hasn't had a hands-on test yet, so if something doesn't work there, please [open an issue]({{ site.repository_url }}/issues).
 
 ## 1. Install certutil
 

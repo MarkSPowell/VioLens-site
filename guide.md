@@ -63,8 +63,11 @@ this computer:
    you get the system's "Do you want to install this certificate?"
    prompt. On macOS, VioLens shows its own confirmation before it adds
    anything to your login keychain, and on Linux before it adds anything
-   to your browsers' certificate databases (see "Linux" below). Accept
-   it to continue. Nothing you
+   to your browsers' certificate databases (see "Linux" below). Firefox
+   on macOS keeps its own certificates, so VioLens also turns on its
+   setting to trust the ones macOS trusts
+   (`security.enterprise_roots.enabled`, in each profile's `user.js`);
+   restart Firefox if it was open. Accept it to continue. Nothing you
    capture leaves your device unless you send it somewhere.
 4. Once it's running, the status bar shows the port VioLens is listening
    on and whether it registered itself as the system proxy. If it couldn't
@@ -191,8 +194,9 @@ tabs:
   anywhere. Check **Load images and styles from the site** to let the
   browser fetch the page's images, style sheets and fonts; scripts stay
   blocked. (If your browser is using VioLens as its proxy, those requests
-  appear in the session list.) Copies go in a `VioLens-preview` folder in
-  your temp folder and are deleted after a day.
+  appear in the session list.) Copies go in a `VioLens-preview-` folder in
+  your temp folder, a new one each time VioLens starts, that only your
+  account can open, and are deleted after a day.
 - **WebForms** (request side, only when there's something to show): the
   query string and any form fields, one row per name and value, decoded.
   Form uploads (`multipart/form-data`) show each field, and each file's
@@ -335,8 +339,10 @@ certificate, it asks VioLens, and the browser never sees the request (or
 shows its certificate prompt). VioLens records it instead: the Timing tab
 says the server asked, and which certificate authorities it accepts, and the
 session gets a **Notes** tab with the `x-client-certificate-requested` note.
-VioLens doesn't send a client certificate yet, so a server that requires
-one refuses the connection; the 502 page then says that's the likely reason.
+VioLens sends a client certificate only once you choose one (see **Client
+certificate** under Tools > Connections); without one, a server that
+requires one refuses the connection, and the 502 page then says that's the
+likely reason.
 
 ### Finding sessions
 
@@ -675,6 +681,13 @@ a domain account. The password is kept only while VioLens is running
 and is never saved. If signing in doesn't work, the 502 page VioLens
 shows says what the proxy offered.
 
+Basic sends the password as plain text, which anyone who can see the
+traffic to that proxy can read. So the first time a proxy asks for it,
+VioLens asks you first, naming the proxy. **Send** sends it to that
+proxy for the rest of the session. **Don't Send** (or no answer within
+2 minutes) passes the proxy's sign-in request on to the browser instead.
+VioLens asks again only if you change the password.
+
 VioLens can't yet use a SOCKS proxy.
 
 **Allow remote computers to connect.** Lets phones, tablets and other
@@ -686,8 +699,11 @@ proxy set, open `http://violens/` to download VioLens's root
 certificate, and follow the instructions on that page to install and trust
 it. Anyone on your network can use the proxy while this is on, so turn it
 off when you've finished, and remove the certificate from the other device.
-Other devices can't reach this computer's own `localhost` services
-through VioLens; they get a "403 Forbidden" page instead.
+Other devices can't reach this computer's own `localhost` services, or
+link-local addresses such as a cloud server's metadata service, through
+VioLens; they get a "403 Forbidden" page instead. Anything else this
+computer can reach, they can too, including networks it's on through a
+VPN, so don't turn this on over a network you don't trust.
 
 **Use HTTP/2 with browsers.** Lets browsers use HTTP/2 with
 VioLens for HTTPS sites, as they would with the site itself. VioLens then
@@ -720,9 +736,11 @@ request reaches VioLens, not the browser, so VioLens answers it.
   servers; on Windows that's the Personal store, on macOS your login
   keychain.
 - With the box after **for** left empty, the certificate goes to every
-  server that asks for one, as a browser would offer it. To keep it from
-  other servers, list the hosts it's for there, in the same format as
-  above.
+  server that asks for one, as a browser would offer it. A certificate
+  usually names who it belongs to, so any site could ask for it to learn
+  who you are; VioLens shows a warning under the row while the box is
+  empty. To keep it from other servers, list the hosts it's for there, in
+  the same format as above.
 - The Timing tab and Notes say whether the server asked, and which
   certificate VioLens sent.
 - VioLens sends one certificate. Fiddler Classic's `ClientCertificate.cer`
@@ -1063,7 +1081,8 @@ Capture closes means VioLens asks to trust a new one next time.
 ## Known limitations
 
 VioLens is a 1.0 release candidate. The main gaps are SOCKS proxies and
-Digest proxy sign-in, sending only one client certificate, and the Mac
-and Linux builds having had less use than the Windows one. The full list is in the Known
+Digest proxy sign-in, sending only one client certificate, and that the
+Mac build and KDE Plasma haven't had as much hands-on testing as Windows
+and Ubuntu. The full list is in the Known
 limitations section of [README.md](https://github.com/MarkSPowell/VioLens/blob/main/README.md).
 {% endraw %}

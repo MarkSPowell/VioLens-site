@@ -33,9 +33,15 @@ It's written from scratch. I work from public documentation, behavior anyone can
 
 Eric Lawrence's public writing about Fiddler, including [Fiddler in 2026](https://textslashplain.com/2026/08/05/fiddler-in-2026/), has been a big help. VioLens also builds on some of his published open source work under its own licenses, such as the NetLog importer that the installers offer as an optional extension. The packet capture importer started out in his Clearinet project.
 
+## VioLens and Clearinet
+
+The names are confusingly close, so: VioLens isn't Eric's Clearinet. Eric, who created Fiddler, is building his own free successor to Fiddler Classic called [Clearinet](https://github.com/ericlaw1979/Clearinet). My project started out as CLeARINET because his Fiddler in 2026 post felt like a call to action, and I wanted to answer it.
+
+We went different ways. Eric is sticking with WinForms on Windows so Clearinet looks and works like the Fiddler people already know. I wanted something that runs on a Mac and Linux too, so VioLens uses Avalonia, follows Fiddler's layout without copying its look, and has its engine on NuGet. I renamed mine in 0.2 to keep the two apart. If you only need Windows and want the closest thing to Fiddler Classic, Clearinet is worth following too. Both are free for any use.
+
 ## Getting involved
 
-- Try it, and [tell me what breaks]({{ site.repository_url }}/issues). Bug reports from real networks are the most useful thing right now, especially from Linux desktops.
+- Try it, and [tell me what breaks]({{ site.repository_url }}/issues). Bug reports from real networks are the most useful thing right now, especially from Macs and KDE Plasma.
 - Come and talk about it on [Discord]({{ site.discord_url }}): questions, ideas, or how you're using VioLens.
 - Contribute code, tests or documentation. The [contributing guide]({{ site.repository_url }}/blob/main/CONTRIBUTING.md) and [code of conduct]({{ site.repository_url }}/blob/main/CODE_OF_CONDUCT.md) are the place to start.
 - If you relied on a Fiddler Classic extension, help port it. The [User Guide]({{ '/guide/' | relative_url }}#extensions) explains how extensions work in VioLens.

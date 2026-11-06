@@ -28,6 +28,8 @@ Click **Start**. VioLens sets itself as your Mac's proxy while it runs, so traff
 
 To decrypt HTTPS, VioLens needs a root certificate your Mac trusts. The first time you click Start, VioLens explains this and asks before it adds a certificate called `DO_NOT_TRUST_ViolensRoot` to your login keychain. macOS may ask for your password.
 
+Firefox keeps its own list of certificates and ignores the keychain unless you tell it otherwise, so VioLens also turns on Firefox's setting to trust what macOS trusts. If Firefox was open, restart it.
+
 The certificate is created on your Mac and only used there. Nothing VioLens captures leaves your Mac unless you save or send it yourself.
 
 ## 4. Browse, and read the traffic

@@ -39,7 +39,7 @@ Open the app or site, and its requests appear in VioLens's session list. Everyth
 
 ## 5. Clean up
 
-When you've finished, turn the phone's proxy off, remove VioLens's certificate from the phone, and turn off **Allow remote computers to connect**. While that setting is on, anyone on your network can use your proxy.
+When you've finished, turn the phone's proxy off, remove VioLens's certificate from the phone, and turn off **Allow remote computers to connect**. While that setting is on, anyone on your network can use your proxy, and reach anything your computer can, including your company's network if you're on a VPN. So only turn it on at home or on a network you trust.
 
 <div class="related" markdown="1">
 **Related:** [Mock an API response]({{ '/how-to/mock-api-responses/' | relative_url }}) · [Capture HTTPS on a Mac]({{ '/how-to/capture-https-traffic-on-mac/' | relative_url }}) · [User Guide: Connections]({{ '/guide/' | relative_url }}#connections-upstream-proxy-and-other-devices)

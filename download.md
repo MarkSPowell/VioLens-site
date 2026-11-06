@@ -7,7 +7,7 @@ description: Download VioLens, a free and open source HTTPS debugging proxy, for
 
 # Download VioLens
 
-<p class="lede">This is the release candidate for VioLens 1.0. Everything planned for 1.0 is in. What's left is more testing on Macs and Linux desktops, so reports from those are especially welcome. Downloads come from the releases page on GitHub, along with notes on what changed.</p>
+<p class="lede">This is the release candidate for VioLens 1.0. Everything planned for 1.0 is in. What's left is more testing on Macs and on KDE Plasma, so if you use either, I'd especially like to hear how it goes. Downloads come from the releases page on GitHub, along with notes on what changed.</p>
 
 <div class="downloads">
   <section class="download">
@@ -98,7 +98,7 @@ These are the gaps you're most likely to run into:
 - Captured bodies are kept in memory (up to 64 MB each). For long captures, use the **Keep** drop-down next to Start and Stop to hold only the newest sessions.
 - Plain HTTP upstream proxies work, with Negotiate, NTLM or Basic sign-in. SOCKS proxies and Digest sign-in don't yet.
 - A Fiddler Classic extension has to be rebuilt from its source (usually by adding one file). You can't drop in a compiled `.dll` as it is.
-- Linux is new and hasn't had much real-world use yet. It sets the proxy on GNOME and KDE Plasma only, and command-line tools such as curl need the certificate added to the system by hand ([the commands]({{ '/how-to/capture-https-traffic-on-linux/' | relative_url }}#command-line-tools)).
+- On Linux I've tested it by hand on Ubuntu with GNOME, but not yet on KDE Plasma. It sets the proxy on GNOME and KDE Plasma only, and command-line tools such as curl need the certificate added to the system by hand ([the commands]({{ '/how-to/capture-https-traffic-on-linux/' | relative_url }}#command-line-tools)).
 - The Mac version has had less use than the Windows one.
 - VioLens Capture is packaged for Windows only so far.
 
