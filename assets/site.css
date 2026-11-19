@@ -208,4 +208,6 @@ code, pre, kbd { font-family: var(--mono); font-size: 0.9em; }
 .howto-list li { background: var(--bg-raised); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; margin: 0; }
 .howto-list a { font-weight: 600; }
 .howto-list p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+.post-meta { color: var(--muted); font-size: 14px; margin: 0 0 8px; }
+.post-meta a { color: inherit; }
 .related { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); }

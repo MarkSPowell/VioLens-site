@@ -1,0 +1,19 @@
+---
+layout: page
+title: Blog
+seo_title: "VioLens Blog: Building a Fiddler Classic Alternative"
+description: Notes on building VioLens, a free, open source HTTPS debugging proxy and Fiddler Classic alternative for Windows, Mac and Linux.
+---
+
+<h1>Blog</h1>
+
+<p class="lede">Notes on building VioLens: what I tried, what worked, and what didn't. You can follow along with the <a href="{{ '/feed.xml' | relative_url }}">RSS feed</a>.</p>
+
+<ul class="howto-list post-list">
+{%- for post in site.posts %}
+  <li>
+    <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+    <p><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %-d, %Y" }}</time> · {{ post.description }}</p>
+  </li>
+{%- endfor %}
+</ul>

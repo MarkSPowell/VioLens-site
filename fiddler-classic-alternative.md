@@ -85,7 +85,7 @@ It also does a few things Fiddler Classic never did. It runs on Mac and Linux, c
 5. **Load your FiddlerScript.** Fiddler Classic keeps it at `Documents\Fiddler2\Scripts\CustomRules.js`. In VioLens, check **Tools > FiddlerScript**, click **Browse**, pick the file and click **Load**. The status line shows which handlers it found, or the error if something doesn't load.
 6. **Add your AutoResponder rules.** Check **Tools > AutoResponder** and add your rules. The match and action syntax is the same as Fiddler's.
 7. **Set up phones and other devices again.** Turn on **Allow remote computers to connect** in **Tools > Connections**. Then, on the device, open `http://violens/` to install VioLens's certificate. [How to debug iPhone and Android traffic]({{ '/how-to/debug-iphone-android-traffic/' | relative_url }}) walks through it.
-8. **Port the extensions you rely on.** The [User Guide]({{ '/guide/' | relative_url }}#extensions) explains how. Three ported extensions come with the installers: Eric Lawrence's NetLog importer, the CSP Rule Collector and the Privacy Scanner.
+8. **Port the extensions you rely on.** The [User Guide]({{ '/guide/' | relative_url }}#extensions) explains how, and [this post]({{ '/blog/porting-fiddler-extensions/' | relative_url }}) covers why it works the way it does. Three ported extensions come with the installers: Eric Lawrence's NetLog importer, the CSP Rule Collector and the Privacy Scanner.
 
 When you're done, you can remove Fiddler's root certificate from your computer if you no longer use Fiddler Classic.
 

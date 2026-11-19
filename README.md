@@ -18,6 +18,7 @@ push to `main` and the site updates within a minute or two.
 | `fiddler-classic-alternative.md` | For people leaving Fiddler Classic: the license change, what carries over, how to switch, FAQ |
 | `compare.md` | VioLens compared with other web debuggers. Not published yet (`published: false`) until it's fact-checked |
 | `how-to/` | Short how-to guides; a page with `howto: true` and an `order` is listed on `/how-to/` automatically |
+| `_posts/` | Blog posts, named `YYYY-MM-DD-slug.md` and served at `/blog/slug/`. Front matter needs `title` and `description`; the layout and address are set in `_config.yml`. `blog/index.html` lists them, and jekyll-feed writes `/feed.xml` |
 | `privacy.md` | Privacy policy (linked from the footer, the Download page and Microsoft submissions). Update it if the app or site ever starts sending data anywhere |
 | `robots.txt` | Points search engines at `/sitemap.xml`, which jekyll-sitemap generates |
 

@@ -19,12 +19,21 @@ discord_url: https://discord.gg/NJfnGnn4PT
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
+  - jekyll-feed
 logo: /assets/emblem.png
 defaults:
   - scope:
       path: ""
     values:
       image: /assets/social-card.png
+  # Blog posts live in _posts/ as YYYY-MM-DD-slug.md and are served at
+  # /blog/slug/. jekyll-feed writes /feed.xml from them.
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      permalink: /blog/:title/
 markdown: kramdown
 kramdown:
   input: GFM
