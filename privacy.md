@@ -10,7 +10,7 @@ description: VioLens and violens.dev don't collect, store or share any personal 
 
 This policy covers the VioLens app (for Windows, macOS and Linux), VioLens Capture, `violens-exec`, the `Violens.ProxyCore` and `Violens.ProxyHost.Client` libraries, and this website, violens.dev. VioLens is an independent open source project, and "I" here means its maintainer.
 
-Last updated: November 6, 2026.
+Last updated: November 19, 2026.
 
 ## The VioLens app
 
@@ -46,6 +46,8 @@ VioLens can run FiddlerScript files and extensions that you choose to load. They
 ## This website
 
 violens.dev doesn't use cookies, analytics, advertising or tracking of any kind, and it doesn't load anything from other websites. The fonts, images and video are all served from this site.
+
+The [SAZ viewer]({{ '/saz-viewer/' | relative_url }}) reads the file you open with JavaScript in your browser, on your computer. The file isn't uploaded to this site or anywhere else.
 
 The site is hosted on [GitHub Pages](https://pages.github.com/). Like any web host, GitHub may record technical information, such as your IP address, when your browser requests a page, for security and to keep the service running. I can't see or access those records. [GitHub's privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement) explains how GitHub handles them.
 
