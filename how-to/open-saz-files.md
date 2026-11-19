@@ -12,6 +12,10 @@ summary: "Open a .saz file without Fiddler, on Windows, Mac or Linux, and save i
 
 <p class="lede">A <code>.saz</code> file is a Fiddler Session Archive: a zip of captured requests and responses. Someone may have sent you one to look at, or you may have years of them saved. VioLens opens them for free, on any of your computers, and can save them as HAR.</p>
 
+<div class="callout" markdown="1">
+Just need a quick look? The [SAZ viewer]({{ '/saz-viewer/' | relative_url }}) opens a `.saz` file in your browser and converts it to HAR, with nothing to install. The file isn't uploaded anywhere.
+</div>
+
 ## Open a SAZ file
 
 1. [Download VioLens]({{ '/download/' | relative_url }}) and open it.

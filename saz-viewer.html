@@ -1,0 +1,79 @@
+---
+layout: default
+title: SAZ viewer
+seo_title: "Open SAZ Files Online: Free SAZ Viewer and SAZ to HAR Converter"
+description: Open a Fiddler .saz file in your browser and convert it to HAR. Free, with nothing to install, and the file never leaves your computer.
+faq:
+  - q: Is my SAZ file uploaded anywhere?
+    a: |
+      No. This page reads the file with JavaScript in your browser, and nothing is sent to violens.dev or anyone else. You can check: open your browser's developer tools, go to the Network tab, and open a file. No requests are made. Once the page has loaded it even works offline.
+  - q: What is a SAZ file?
+    a: |
+      A `.saz` file is a Fiddler Session Archive, saved by Fiddler Classic, Fiddler Everywhere or VioLens. It's a zip file with a `raw/` folder holding each session's request (`_c.txt`), response (`_s.txt`) and timings and flags (`_m.xml`).
+  - q: How do I convert SAZ to HAR?
+    a: |
+      Open the `.saz` file here, type in the filter box if you only want some of the sessions, and click **Download HAR**. Bodies are decompressed, text is saved as text and anything else as base64, and timings and comments are kept. CONNECT tunnels are left out, as they are in browsers' HAR files.
+  - q: Why won't my SAZ file open?
+    a: |
+      The viewer can't open password-protected SAZ files, so save it again from Fiddler without a password. Files that add up to more than 1 GB when unzipped are too big for a browser tab. If your browser can't decompress a body (not every browser supports Brotli or zstd yet), that body is shown as it was saved.
+  - q: Can I convert HAR to SAZ too?
+    a: |
+      Not on this page, but the [VioLens app](/download/) can: choose **File > Import HAR**, then **File > Save SAZ**. It's free for any use, on Windows, Mac and Linux.
+---
+<article class="wrap tool-page" id="sv">
+  <h1>Open SAZ files in your browser</h1>
+  <p class="lede">Look inside a Fiddler <code>.saz</code> session archive, or convert it to HAR, without installing anything. This page reads the file on your computer. It isn't uploaded anywhere.</p>
+
+  <div class="sv-drop" id="sv-drop">
+    <p class="sv-drop-hint">Drop a <code>.saz</code> file anywhere on this page, or</p>
+    <label class="button primary sv-pick">Choose a .saz file<input type="file" id="sv-file" accept=".saz,application/zip"></label>
+    <p class="sv-status" id="sv-status" role="status" aria-live="polite"></p>
+    <noscript><p class="sv-status">The viewer needs JavaScript. Or <a href="{{ '/download/' | relative_url }}">download VioLens</a> to open SAZ files on your computer.</p></noscript>
+  </div>
+
+  <section class="sv-results" id="sv-results" hidden>
+    <div class="sv-toolbar">
+      <input type="search" id="sv-filter" placeholder="Filter by URL, method, status or type" aria-label="Filter sessions">
+      <span class="sv-count" id="sv-count"></span>
+      <span class="buttons">
+        <button type="button" class="button primary" id="sv-har">Download HAR</button>
+        <button type="button" class="button" id="sv-another">Open another file</button>
+      </span>
+    </div>
+    <div class="sv-table-scroll">
+      <table class="sv-table">
+        <thead><tr><th>#</th><th>Result</th><th>Method</th><th>Host</th><th>URL</th><th>Body</th><th>Content-Type</th></tr></thead>
+        <tbody id="sv-rows"></tbody>
+      </table>
+    </div>
+    <p class="sv-hint">Click a session, or use the arrow keys, to see its headers and body.</p>
+    <div class="sv-detail" id="sv-detail" hidden></div>
+  </section>
+
+  <section class="sv-more">
+    <h2>Need more than a quick look?</h2>
+    <p>The <a href="{{ '/download/' | relative_url }}">VioLens app</a> opens the same files and lets you search inside bodies, compare two sessions side by side, replay and edit requests, and capture new traffic. It's an open source alternative to Fiddler Classic, free for any use, for Windows, Mac and Linux.</p>
+    <div class="buttons">
+      <a class="button primary" href="{{ '/download/' | relative_url }}">Download VioLens</a>
+      <a class="button" href="{{ '/how-to/open-saz-files/' | relative_url }}">How to open SAZ files in VioLens</a>
+    </div>
+
+    <h2>Questions</h2>
+    {% include faq.html %}
+  </section>
+</article>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "VioLens SAZ viewer",
+  "url": "{{ page.url | absolute_url }}",
+  "description": {{ page.description | jsonify }},
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (runs in the browser)",
+  "browserRequirements": "Requires JavaScript",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<script src="{{ '/assets/saz-viewer.js' | relative_url }}" defer></script>
