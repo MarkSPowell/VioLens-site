@@ -2,8 +2,10 @@
 layout: default
 ---
 <article class="wrap prose post">
+  {%- assign author = page.author | default: site.author %}
   <p class="post-meta"><a href="{{ '/blog/' | relative_url }}">Blog</a> · <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time></p>
   <h1>{{ page.title }}</h1>
+  <p class="post-meta">By {{ author.name | default: author }}</p>
   {{ content }}
   <div class="related">
     <p><a href="{{ '/blog/' | relative_url }}">More posts</a> · <a href="{{ '/feed.xml' | relative_url }}">RSS feed</a></p>

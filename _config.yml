@@ -13,6 +13,11 @@ repository_url: https://github.com/MarkSPowell/VioLens
 releases_url: https://github.com/MarkSPowell/VioLens/releases
 discord_url: https://discord.gg/NJfnGnn4PT
 
+# Blog post bylines, the RSS feed and search engines' author data. A post
+# can set its own author: to override it.
+author:
+  name: Mark Powell
+
 # Search engines and link previews. jekyll-seo-tag writes the canonical
 # link, Open Graph and Twitter tags and JSON-LD; jekyll-sitemap writes
 # /sitemap.xml. GitHub Pages supports both without any other setup.
