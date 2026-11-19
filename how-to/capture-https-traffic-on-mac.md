@@ -16,7 +16,11 @@ You'll need a Mac with Apple silicon (M1 or newer) and macOS 11 or later.
 
 ## 1. Install VioLens
 
-[Download the disk image]({{ '/download/' | relative_url }}), open it and drag VioLens into Applications.
+[Download the disk image]({{ '/download/' | relative_url }}), open it and drag VioLens into Applications. Or, if you use Homebrew:
+
+```bash
+brew install markspowell/violens/violens
+```
 
 VioLens is signed with an Apple Developer ID and notarized by Apple, so it opens like any other app. If macOS asks whether you want to open an app downloaded from the internet, click **Open**. (If you built VioLens yourself, see [Opening it on a Mac]({{ '/download/' | relative_url }}#opening-it-on-a-mac).)
 

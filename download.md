@@ -17,6 +17,7 @@ description: Download VioLens, a free and open source HTTPS debugging proxy, for
       <li>Installs just for you, or for everyone on the computer.</li>
       <li>It's code-signed, so Windows can check it hasn't been tampered with. Windows may still warn you about it for now. <a href="#if-windows-says-it-protected-your-pc">Here's why</a>.</li>
       <li>Setup offers the optional extensions as checkboxes.</li>
+      <li>Rolling it out at work? There's a Group Policy template with each release, and Intune can import it too. <a href="{{ '/guide/' | relative_url }}#the-group-policy-template">Setting it up</a>.</li>
     </ul>
     <a class="button primary" href="{{ site.releases_url }}/latest">Get the Windows installer</a>
     <p>Download <code>VioLens-Setup-<em>version</em>.exe</code> from the latest release.</p>
@@ -29,6 +30,7 @@ description: Download VioLens, a free and open source HTTPS debugging proxy, for
       <li>The Mac version is newer than the Windows one, so please report anything that doesn't work.</li>
       <li>It's signed with an Apple Developer ID and notarized by Apple, so it opens like any other app.</li>
       <li>The optional extensions are in the disk image's Optional Extensions folder.</li>
+      <li>If you use Homebrew, you can install it with <code>brew install markspowell/violens/violens</code> instead.</li>
     </ul>
     <a class="button primary" href="{{ site.releases_url }}/latest">Get the macOS disk image</a>
     <p>Download <code>VioLens-<em>version</em>-macos-arm64.dmg</code> from the latest release.</p>
