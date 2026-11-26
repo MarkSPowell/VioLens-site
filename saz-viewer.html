@@ -1,34 +1,44 @@
 ---
 layout: default
-title: SAZ viewer
-seo_title: "Open SAZ Files Online: Free SAZ Viewer and SAZ to HAR Converter"
-description: Open a Fiddler .saz file in your browser and convert it to HAR. Free, with nothing to install, and the file never leaves your computer.
+title: SAZ and HAR viewer
+seo_title: "SAZ and HAR Viewer Online: Open, Convert SAZ to HAR, Clean HAR"
+description: Open Fiddler SAZ or HAR files in your browser, convert SAZ to HAR, and remove cookies before sharing. Free, and your file is never uploaded.
 faq:
-  - q: Is my SAZ file uploaded anywhere?
+  - q: Is my file uploaded anywhere?
     a: |
       No. This page reads the file with JavaScript in your browser, and nothing is sent to violens.dev or anyone else. You can check: open your browser's developer tools, go to the Network tab, and open a file. No requests are made. Once the page has loaded it even works offline.
   - q: What is a SAZ file?
     a: |
       A `.saz` file is a Fiddler Session Archive, saved by Fiddler Classic, Fiddler Everywhere or VioLens. It's a zip file with a `raw/` folder holding each session's request (`_c.txt`), response (`_s.txt`) and timings and flags (`_m.xml`).
+  - q: What is a HAR file?
+    a: |
+      A `.har` (HTTP Archive) file is a JSON record of web requests and responses. Browser developer tools can export one, and support teams often ask for it. Open it here to see each request, its headers, and any bodies the file includes. Some HAR files leave bodies out.
+  - q: How do I remove cookies from a HAR file?
+    a: |
+      Open the `.har` file here, tick **Remove cookies and sign-in headers**, and click **Download cleaned HAR**. You get a new file, and your original isn't changed. Only the sessions that match the filter are included. Read the next answer before you share it.
   - q: How do I convert SAZ to HAR?
     a: |
       Open the `.saz` file here, type in the filter box if you only want some of the sessions, and click **Download HAR**. Bodies are decompressed, text is saved as text and anything else as base64, and timings and comments are kept. CONNECT tunnels are left out, as they are in browsers' HAR files.
-  - q: Why won't my SAZ file open?
+  - q: Is it safe to send the HAR file to someone?
     a: |
-      The viewer can't open password-protected SAZ files, so save it again from Fiddler without a password. Files that add up to more than 1 GB when unzipped are too big for a browser tab. If your browser can't decompress a body (not every browser supports Brotli or zstd yet), that body is shown as it was saved.
+      Check it first. A capture can hold passwords, session cookies and personal data. Tick **Remove cookies and sign-in headers** before you download to blank the `Cookie`, `Set-Cookie`, `Authorization` and common API key and token headers. It doesn't change URLs, bodies, comments, WebSocket messages, other headers or other fields in the file, so filter out sessions you don't need and look through the rest.
+  - q: Why won't my file open?
+    a: |
+      HAR files must be valid JSON and no bigger than 256 MB. For SAZ files, the viewer can't open password-protected SAZ files, so save it again from Fiddler without a password. Files that add up to more than 1 GB when unzipped are too big for a browser tab. If your browser can't decompress a body (not every browser supports Brotli or zstd yet), that body is shown as it was saved.
   - q: Can I convert HAR to SAZ too?
     a: |
-      Not on this page, but the [VioLens app](/download/) can: choose **File > Import HAR**, then **File > Save SAZ**. It's free for any use, on Windows, Mac and Linux.
+      You can view a HAR file here, but this page can't save it as SAZ. The [VioLens app](/download/) can: choose **File > Import HAR**, then **File > Save SAZ**. It's free for any use, on Windows, Mac and Linux.
 ---
 <article class="wrap tool-page" id="sv">
-  <h1>Open SAZ files in your browser</h1>
-  <p class="lede">Look inside a Fiddler <code>.saz</code> session archive, or convert it to HAR, without installing anything. This page reads the file on your computer. It isn't uploaded anywhere.</p>
+  <h1>Open SAZ and HAR files in your browser</h1>
+  <p class="lede">Look inside a Fiddler <code>.saz</code> session archive or a <code>.har</code> file, convert SAZ to HAR, or remove cookies before you share, without installing anything. This page reads the file on your computer. It isn't uploaded anywhere.</p>
 
   <div class="sv-drop" id="sv-drop">
-    <p class="sv-drop-hint">Drop a <code>.saz</code> file anywhere on this page, or</p>
-    <label class="button primary sv-pick">Choose a .saz file<input type="file" id="sv-file" accept=".saz,application/zip"></label>
+    <p class="sv-drop-hint">Drop a <code>.saz</code> or <code>.har</code> file anywhere on this page, or</p>
+    <label class="button primary sv-pick">Choose a .saz or .har file<input type="file" id="sv-file" accept=".saz,.har,application/zip"></label>
+    <p class="sv-sample">No file handy? <button type="button" class="sv-link" id="sv-sample" data-src="{{ '/assets/sample.saz' | relative_url }}">Try a sample</button></p>
     <p class="sv-status" id="sv-status" role="status" aria-live="polite"></p>
-    <noscript><p class="sv-status">The viewer needs JavaScript. Or <a href="{{ '/download/' | relative_url }}">download VioLens</a> to open SAZ files on your computer.</p></noscript>
+    <noscript><p class="sv-status">The viewer needs JavaScript. Or <a href="{{ '/download/' | relative_url }}">download VioLens</a> to open SAZ and HAR files on your computer.</p></noscript>
   </div>
 
   <section class="sv-results" id="sv-results" hidden>
@@ -40,9 +50,10 @@ faq:
         <button type="button" class="button" id="sv-another">Open another file</button>
       </span>
     </div>
+    <label class="sv-redact"><input type="checkbox" id="sv-redact"> Remove cookies and sign-in headers from the HAR. Tokens or personal data in URLs, bodies, comments and elsewhere are kept, so check the file before you share it.</label>
     <div class="sv-table-scroll">
       <table class="sv-table">
-        <thead><tr><th>#</th><th>Result</th><th>Method</th><th>Host</th><th>URL</th><th>Body</th><th>Content-Type</th></tr></thead>
+        <thead><tr><th><button type="button" class="sv-sort" data-sort="number">#</button></th><th><button type="button" class="sv-sort" data-sort="status">Result</button></th><th><button type="button" class="sv-sort" data-sort="method">Method</button></th><th><button type="button" class="sv-sort" data-sort="host">Host</button></th><th><button type="button" class="sv-sort" data-sort="url">URL</button></th><th><button type="button" class="sv-sort" data-sort="size">Body</button></th><th><button type="button" class="sv-sort" data-sort="type">Content-Type</button></th></tr></thead>
         <tbody id="sv-rows"></tbody>
       </table>
     </div>
@@ -66,7 +77,7 @@ faq:
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "VioLens SAZ viewer",
+  "name": "VioLens SAZ and HAR viewer",
   "url": "{{ page.url | absolute_url }}",
   "description": {{ page.description | jsonify }},
   "applicationCategory": "DeveloperApplication",

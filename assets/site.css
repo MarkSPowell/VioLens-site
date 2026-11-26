@@ -225,6 +225,21 @@ code, pre, kbd { font-family: var(--mono); font-size: 0.9em; }
 .sv-pick:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
 .sv-status { margin: 14px 0 0; color: var(--muted); overflow-wrap: anywhere; }
 .sv-status:empty { display: none; }
+.sv-sample { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
+.sv-link { padding: 0; border: 0; background: none; color: var(--accent); font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.sv-link:hover { color: var(--accent-strong); }
+.sv-drop.loaded { padding: 14px 20px; margin: 20px 0; }
+.sv-drop.loaded .sv-drop-hint, .sv-drop.loaded .sv-sample, .sv-drop.loaded .sv-pick { display: none; }
+.sv-drop.loaded .sv-status { margin: 0; }
+.sv-redact { display: flex; gap: 8px; align-items: flex-start; margin: 0 0 12px; color: var(--muted); font-size: 14px; cursor: pointer; }
+.sv-redact input { margin: 4px 0 0; accent-color: var(--accent); }
+.sv-sort { padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.sv-sort:hover { color: var(--text); }
+.sv-table th[aria-sort] { color: var(--text); }
+.sv-table th[aria-sort="ascending"] .sv-sort::after { content: " \2191"; }
+.sv-table th[aria-sort="descending"] .sv-sort::after { content: " \2193"; }
+.sv-table tbody tr.empty { cursor: default; }
+.sv-table tbody tr.empty td { color: var(--muted); font-family: var(--font); }
 .sv-toolbar { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin-bottom: 12px; }
 .sv-toolbar input[type="search"] { flex: 1 1 260px; min-width: 0; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-sunken); color: var(--text); font: 15px var(--font); }
 .sv-toolbar input[type="search"]:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
