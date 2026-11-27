@@ -1,5 +1,6 @@
-/* VioLens SAZ and HAR viewer: opens a Fiddler .saz or a .har file in the
-   browser, and saves either as HAR. Everything happens on the visitor's computer: the file is read
+/* VioLens SAZ, HAR and NetLog viewer: opens a Fiddler .saz, a .har or a
+   Chromium net-export file in the browser. SAZ and HAR files can be saved as
+   HAR. Everything happens on the visitor's computer: the file is read
    with the File API, unzipped and decompressed with the browser's own
    DecompressionStream, and nothing is sent anywhere. The parsing follows the
    VioLens app's SazReader and HarWriter (Violens.ProxyCore/Sessions).
@@ -12,6 +13,7 @@
   var MAX_ENTRY_BYTES = 256 * 1024 * 1024;   // one file inside the archive
   var MAX_TOTAL_BYTES = 1024 * 1024 * 1024;  // everything read from one archive
   var MAX_HAR_BYTES = 256 * 1024 * 1024;
+  var MAX_NETLOG_BYTES = 256 * 1024 * 1024;
   var MAX_TEXT_SHOWN = 2 * 1024 * 1024;
   var MAX_HEX_SHOWN = 64 * 1024;
 
@@ -764,8 +766,225 @@
     return { log: out };
   }
 
+  // ---------------------------------------------------------- reading NetLog
+
+  // Chromium's net-export writes one JSON object ({constants, events,
+  // polledData}), or JSON Lines with a type on each line. Both put one event
+  // on a line, so a log that was cut short can still be read up to the cut.
+  function parseNetLog(text) {
+    text = text.replace(/^﻿/, '');
+    var constants = null, events = [], partial = false, bad = 0;
+    function parse(line) { try { return JSON.parse(line); } catch (e) { return undefined; } }
+
+    if (/^\s*\{\s*"type"\s*:/.test(text)) {
+      var ended = false;
+      text.split('\n').forEach(function (line) {
+        if (!line.trim()) return;
+        var item = parse(line);
+        if (!isObject(item)) bad++;
+        else if (item.type === 'constants') constants = item.constants;
+        else if (item.type === 'event' && isObject(item.event)) events.push(item.event);
+        else if (item.type === 'end') ended = true;
+      });
+      partial = !ended || bad > 0;
+    } else {
+      var whole = parse(text);
+      if (isObject(whole)) {
+        constants = whole.constants;
+        events = list(whole.events);
+      } else {
+        partial = true;
+        var inEvents = false;
+        text.split('\n').some(function (line) {
+          var trimmed = line.trim();
+          if (!inEvents) {
+            if (/^\{\s*"constants"\s*:/.test(trimmed)) {
+              var head = parse(trimmed.replace(/,$/, '') + '}');
+              if (head) constants = head.constants;
+            } else if (/^"events"\s*:\s*\[$/.test(trimmed)) inEvents = true;
+            return false;
+          }
+          var last = /\],?$/.test(trimmed);
+          var event = parse(trimmed.replace(/\],?$/, '').replace(/,$/, ''));
+          if (isObject(event)) events.push(event);
+          return last;
+        });
+      }
+    }
+    if (!isObject(constants) || !isObject(constants.logEventTypes) || !isObject(constants.logSourceType)) {
+      throw new SazError('This looks like a NetLog file, but it\'s damaged: the information needed to read its events is missing.');
+    }
+    return { constants: constants, events: events, partial: partial };
+  }
+
+  function invert(map) {
+    var out = {};
+    Object.keys(isObject(map) ? map : {}).forEach(function (key) { out[map[key]] = key; });
+    return out;
+  }
+
+  // NetLog writes headers as "Name: value" strings; HTTP/2 and HTTP/3 add
+  // pseudo-headers such as ":method: GET".
+  function netLogHeaders(lines) {
+    var out = [];
+    (Array.isArray(lines) ? lines : []).forEach(function (line) {
+      if (typeof line !== 'string') return;
+      var colon = line.indexOf(':', 1);
+      if (colon > 0) out.push({ name: line.slice(0, colon).trim(), value: line.slice(colon + 1).trim() });
+    });
+    return out;
+  }
+
+  var SENSITIVE = /^(cookie|set-cookie|authorization|proxy-authorization)$/i;
+  // Without sensitive data, values read like "[42 bytes were stripped]".
+  function hasSecrets(headers) {
+    return headers.some(function (h) { return SENSITIVE.test(h.name) && h.value && !/bytes were (stripped|elided)/i.test(h.value); });
+  }
+
+  function newHop(url, method, time, upload) {
+    return { url: url, method: method, start: time, end: time, upload: upload, version: '', requestHeaders: [],
+      responseHeaders: [], statusLine: '', raw: [], filtered: [], error: null, redirect: null, cache: false, cancelled: false, done: false };
+  }
+
+  // The requests one URL_REQUEST made: one for each URL, so every step of a
+  // redirect is listed.
+  function netLogHops(events, types, phases, errors) {
+    var hops = [], hop = null;
+    function answered() { hop.statusLine = ''; hop.responseHeaders = []; hop.raw = []; hop.filtered = []; }
+    events.forEach(function (event) {
+      var type = types[event.type] || '';
+      var phase = phases[event.phase] || '';
+      var p = isObject(event.params) ? event.params : {};
+      var time = Number(event.time);
+      if (type === 'URL_REQUEST_START_JOB' && typeof p.url === 'string') {
+        hop = newHop(p.url, str(p.method), time, p.upload_id !== undefined && String(p.upload_id) !== '-1');
+        hops.push(hop);
+      }
+      if (!hop) return;
+      if (!isNaN(time)) hop.end = Math.max(hop.end, time);
+      if (/SEND_REQUEST_HEADERS$/.test(type) || type === 'HTTP_CACHE_CALLER_REQUEST_HEADERS') {
+        var sent = netLogHeaders(p.headers);
+        if (type === 'HTTP_CACHE_CALLER_REQUEST_HEADERS') {
+          if (!hop.requestHeaders.length) hop.requestHeaders = sent;
+        } else {
+          // Sent again, for example after a sign-in challenge: the last wins.
+          if (hop.statusLine) answered();
+          hop.requestHeaders = sent;
+          hop.version = /QUIC/.test(type) ? 'HTTP/3' : /HTTP2/.test(type) ? 'HTTP/2' : (/HTTP\/[\d.]+/.exec(str(p.line)) || ['HTTP/1.1'])[0];
+        }
+      } else if (type === 'HTTP_TRANSACTION_READ_RESPONSE_HEADERS') {
+        var lines = Array.isArray(p.headers) ? p.headers : [];
+        hop.statusLine = str(lines[0]);
+        hop.responseHeaders = netLogHeaders(lines.slice(1));
+      } else if (type === 'URL_REQUEST_JOB_BYTES_READ' || type === 'URL_REQUEST_JOB_FILTERED_BYTES_READ') {
+        if (typeof p.bytes === 'string') (/FILTERED/.test(type) ? hop.filtered : hop.raw).push(p.bytes);
+      } else if (type === 'URL_REQUEST_REDIRECTED') {
+        hop.redirect = str(p.location);
+        hop.done = true;
+      } else if (type === 'HTTP_CACHE_READ_DATA') hop.cache = true;
+      else if (type === 'CANCELLED') hop.cancelled = true;
+      if (type === 'REQUEST_ALIVE' || type === 'URL_REQUEST_START_JOB') {
+        // -1 only means "still waiting".
+        if (typeof p.net_error === 'number' && p.net_error !== 0 && p.net_error !== -1) hop.error = errors[p.net_error] || 'Error ' + p.net_error;
+        if (type === 'REQUEST_ALIVE' && phase === 'PHASE_END') hop.done = true;
+      }
+    });
+    return hops;
+  }
+
+  function joinBase64(parts) {
+    var chunks = [], total = 0;
+    parts.forEach(function (part) {
+      var binary = atob(part);
+      var bytes = new Uint8Array(binary.length);
+      for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      chunks.push(bytes);
+      total += bytes.length;
+    });
+    return concat(chunks, total);
+  }
+
+  async function netLogSession(hop, number, offset) {
+    var match = /^(\S+)\s+(\d{3})\s*(.*)$/.exec(hop.statusLine);
+    var notes = [];
+    if (hop.error) notes.push('Network error: ' + hop.error);
+    else if (hop.cancelled) notes.push('The log shows this request was cancelled.');
+    if (hop.redirect) notes.push('Redirected to ' + hop.redirect);
+    if (!match && hop.cache) notes.push('Data was read from the browser\'s cache. This page found no status or response headers for it in the log.');
+    if (!hop.done && !hop.error) notes.push('The log doesn\'t show this request finishing.');
+
+    var request = { headers: hop.requestHeaders, version: hop.version, body: new Uint8Array(0), note: null, unknownSize: true };
+    request.decoded = request.body;
+    request.noHeaders = 'No request headers found in this log.';
+    request.noBody = hop.upload
+      ? 'This request uploaded data, but this page can\'t show the request body from a NetLog.'
+      : 'This page doesn\'t show request bodies from a NetLog.';
+
+    var response = { headers: hop.responseHeaders, version: match ? hop.version || match[1] : '', status: match ? parseInt(match[2], 10) : 0,
+      statusText: match ? match[3] : '', body: new Uint8Array(0), note: null };
+    response.noHeaders = 'No response headers found in this log.';
+    response.noBody = 'No body data found. A NetLog only has bodies if it was captured with raw bytes included.';
+    try {
+      if (hop.filtered.length) {
+        // Already decompressed by the browser.
+        response.body = response.decoded = joinBase64(hop.filtered);
+      } else if (hop.raw.length) {
+        response.body = joinBase64(hop.raw);
+        var decoded = await decodeBody(response.body, response.headers);
+        response.decoded = decoded.bytes;
+        response.note = decoded.note;
+      } else {
+        response.decoded = response.body;
+        response.unknownSize = true;
+      }
+    } catch (e) {
+      response.body = response.decoded = new Uint8Array(0);
+      response.unknownSize = true;
+      response.noBody = 'The body data in this log is damaged.';
+    }
+
+    if (response.status === 304 && response.body.length) notes.push('The server answered 304 Not Modified. The body shown is what the log recorded for this request, normally the cached copy.');
+
+    var host = /^[a-z][a-z0-9+.-]*:\/\/(?:[^\/?#@]*@)?([^\/?#]*)/i.exec(hop.url);
+    var started = hop.start + offset;
+    return {
+      number: number, method: hop.method, url: hop.url,
+      host: (host ? host[1] : '').replace(/:\d+$/, '') || '(unknown host)',
+      isConnect: false, request: request, response: response,
+      startedAt: isFinite(started) && !isNaN(new Date(started).getTime()) ? started : null,
+      timings: null, duration: isFinite(hop.end - hop.start) ? hop.end - hop.start : null,
+      flags: {}, webSocket: null, error: hop.error, notes: notes
+    };
+  }
+
+  async function readNetLog(bytes) {
+    var log = parseNetLog(utf8Decoder.decode(bytes));
+    var types = invert(log.constants.logEventTypes);
+    var sources = invert(log.constants.logSourceType);
+    var phases = invert(log.constants.logEventPhase);
+    var errors = invert(log.constants.netError);
+    var requests = new Map();
+    log.events.forEach(function (event) {
+      if (!isObject(event.source) || sources[event.source.type] !== 'URL_REQUEST') return;
+      if (!requests.has(event.source.id)) requests.set(event.source.id, []);
+      requests.get(event.source.id).push(event);
+    });
+    var hops = [];
+    requests.forEach(function (events) { hops = hops.concat(netLogHops(events, types, phases, errors)); });
+    hops.sort(function (a, b) { return a.start - b.start; });
+
+    var offset = Number(log.constants.timeTickOffset);
+    var sessions = [];
+    for (var i = 0; i < hops.length; i++) sessions.push(await netLogSession(hops[i], i + 1, offset));
+    var mode = str(log.constants.logCaptureMode);
+    return {
+      sessions: sessions, skipped: [], netLog: true, partial: log.partial, captureMode: mode,
+      sensitive: (mode !== '' && mode !== 'Default') || hops.some(function (h) { return hasSecrets(h.requestHeaders) || hasSecrets(h.responseHeaders); })
+    };
+  }
+
   var core = {
-    readHar: readHar, copyHar: copyHar, readSaz: readSaz, buildHar: buildHar, parseMessage: parseMessage, dechunk: dechunk,
+    readNetLog: readNetLog, readHar: readHar, copyHar: copyHar, readSaz: readSaz, buildHar: buildHar, parseMessage: parseMessage, dechunk: dechunk,
     readMetadata: readMetadata, readTimings: readTimings, isText: isText, SazError: SazError
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = core;
@@ -826,6 +1045,8 @@
 
   var redact = document.getElementById('sv-redact');
   var sample = document.getElementById('sv-sample');
+  var warning = document.getElementById('sv-warning');
+  var redactLabel = redact.parentNode;
   var sortButtons = Array.prototype.slice.call(document.querySelectorAll('.sv-sort'));
 
   var state = { log: null, sessions: [], shown: [], fileName: 'sessions', selected: null, urls: [], sort: 'number', direction: 1, opening: 0 };
@@ -878,11 +1099,12 @@
     results.hidden = true;
     clearDetail();
     try {
-      var isHar = await looksLikeHar(file);
-      if (isHar && file.size > MAX_HAR_BYTES) throw new SazError('This HAR file is over 256 MB, which is too big to open here.');
-      if (!isHar && !canUnzip) throw new SazError('This browser is too old to open SAZ files here. Try a current version of Chrome, Edge, Firefox or Safari.');
+      var kind = await fileKind(file);
+      if (kind === 'har' && file.size > MAX_HAR_BYTES) throw new SazError('This HAR file is over 256 MB, which is too big to open here.');
+      if (kind === 'netlog' && file.size > MAX_NETLOG_BYTES) throw new SazError('This NetLog file is over 256 MB, which is too big to open here.');
+      if (kind === 'saz' && !canUnzip) throw new SazError('This browser is too old to open SAZ files here. Try a current version of Chrome, Edge, Firefox or Safari.');
       var bytes = new Uint8Array(await file.arrayBuffer());
-      var result = isHar ? readHar(bytes) : await readSaz(bytes, function (done, total) {
+      var result = kind === 'har' ? readHar(bytes) : kind === 'netlog' ? await readNetLog(bytes) : await readSaz(bytes, function (done, total) {
         if (request !== state.opening) return;
         status.textContent = 'Reading ' + file.name + '… ' + done + ' of ' + total + ' sessions';
       });
@@ -890,11 +1112,16 @@
       if (request !== state.opening) return;
       state.sessions = result.sessions;
       state.log = result.log || null;
+      state.netLog = !!result.netLog;
+      // NetLog files can be viewed, but not saved as HAR.
+      harButton.hidden = redactLabel.hidden = state.netLog;
+      showWarning(result);
       state.sort = 'number';
       state.direction = 1;
       drop.classList.add('loaded');
-      state.fileName = file.name.replace(/\.(saz|har|json)$/i, '') || 'sessions';
-      var message = file.name + ': ' + result.sessions.length + ' session' + (result.sessions.length === 1 ? '' : 's') + '.';
+      state.fileName = file.name.replace(/\.(saz|har|jsonl?)$/i, '') || 'sessions';
+      var noun = state.netLog ? ' request' : ' session';
+      var message = file.name + ': ' + result.sessions.length + noun + (result.sessions.length === 1 ? '' : 's') + '.';
       if (result.skipped.length) {
         message += ' ' + result.skipped.length + ' couldn\'t be read (' + result.skipped.slice(0, 3).join('; ') +
           (result.skipped.length > 3 ? '; …' : '') + ').';
@@ -910,10 +1137,29 @@
     }
   }
 
-  // Goes by the content, not the name: HAR is a JSON object, SAZ is a zip.
-  async function looksLikeHar(file) {
+  // Goes by the content, not the name: NetLog and HAR are JSON, SAZ is a zip.
+  async function fileKind(file) {
     var start = await file.slice(0, 1024).text();
-    return /^\uFEFF?\s*\{/.test(start) || (/\.har$/i.test(file.name) && start.slice(0, 2) !== 'PK');
+    if (/^\uFEFF?\s*\{\s*("constants"\s*:|"type"\s*:\s*"constants")/.test(start)) return 'netlog';
+    if (/^\uFEFF?\s*\{/.test(start) || (/\.har$/i.test(file.name) && start.slice(0, 2) !== 'PK')) return 'har';
+    return /\.jsonl?$/i.test(file.name) && start.slice(0, 2) !== 'PK' ? 'har' : 'saz';
+  }
+
+  function showWarning(result) {
+    warning.textContent = '';
+    warning.hidden = !result.netLog;
+    if (!result.netLog) return;
+    if (result.sensitive) {
+      var alert = el('p', 'sv-note warn');
+      alert.appendChild(el('strong', '', 'This log may contain sensitive data. '));
+      alert.appendChild(document.createTextNode((result.captureMode && result.captureMode !== 'Default'
+        ? 'It was captured in ' + result.captureMode + ' mode. ' : 'It has cookie or sign-in header values. ') +
+        'Don\'t share it unless you trust the recipient. This page can\'t clean NetLog files.'));
+      warning.appendChild(alert);
+    }
+    if (result.partial) warning.appendChild(el('p', 'sv-note warn', 'This log is incomplete or partly damaged, so some requests or details may be missing.'));
+    warning.appendChild(el('p', 'sv-note', 'Only URL requests are listed. DNS, socket and other network events aren\'t shown, and NetLog files can\'t be saved as HAR here.' +
+      (result.sensitive ? '' : ' Even without cookies, a log can show which sites were visited.')));
   }
 
   filter.addEventListener('input', render);
@@ -951,7 +1197,7 @@
     var words = filter.value.toLowerCase().split(/\s+/).filter(Boolean);
     state.shown = state.sessions.filter(function (s) {
       if (!words.length) return true;
-      var text = [s.number, s.method, s.url, s.response.status, contentTypeOf(s.response)].join(' ').toLowerCase();
+      var text = [s.number, s.method, s.url, s.response.status, s.error || '', contentTypeOf(s.response)].join(' ').toLowerCase();
       return words.every(function (w) { return text.indexOf(w) >= 0; });
     });
     state.shown.sort(compareSessions);
@@ -975,9 +1221,10 @@
     }
 
     var exported = state.shown.filter(function (s) { return !s.isConnect; }).length;
+    var noun = state.netLog ? ' requests' : ' sessions';
     count.textContent = state.shown.length === state.sessions.length
-      ? state.sessions.length + ' sessions'
-      : state.shown.length + ' of ' + state.sessions.length + ' sessions';
+      ? state.sessions.length + noun
+      : state.shown.length + ' of ' + state.sessions.length + noun;
     if (limit < state.shown.length) count.textContent += ' (the first 5,000 are listed; filter to find the rest)';
     harButton.textContent = (state.log && redact.checked ? 'Download cleaned HAR (' : 'Download HAR (') + exported + ')';
     harButton.disabled = exported === 0;
@@ -990,11 +1237,11 @@
     if (session === state.selected) tr.classList.add('selected');
     var cells = [
       [String(session.number), 'num'],
-      [session.response.status ? String(session.response.status) : '-', statusClass(session.response.status)],
+      session.error ? [session.error, 's5'] : [session.response.status ? String(session.response.status) : '-', statusClass(session.response.status)],
       [session.method, ''],
       [session.host, 'host'],
       [session.isConnect ? 'Tunnel to ' + session.url : session.url.replace(/^(https?|wss?):\/\/[^/]+/i, '') || '/', 'url'],
-      [formatSize(bodySize(session.response)), 'size'],
+      [session.response.unknownSize ? '-' : formatSize(bodySize(session.response)), 'size'],
       [mediaType(contentTypeOf(session.response)), 'type']
     ];
     cells.forEach(function (c) { tr.appendChild(el('td', c[1], c[0])); });
@@ -1038,10 +1285,12 @@
     if (meta.length) detail.appendChild(el('p', 'sv-meta', meta.join(' · ')));
     if (session.flags['ui-comments']) detail.appendChild(el('p', 'sv-comment', 'Comment: ' + session.flags['ui-comments']));
 
+    (session.notes || []).forEach(function (note) { detail.appendChild(el('p', 'sv-comment', note)); });
+
     var sides = el('div', 'sv-sides');
     sides.appendChild(side('Request', session.request.version, session.method + ' ' + session.url, session.request));
     var res = session.response;
-    sides.appendChild(side('Response', res.version, res.status + ' ' + res.statusText, res));
+    sides.appendChild(side('Response', res.version, state.netLog && !res.status ? 'No response status found' : res.status + ' ' + res.statusText, res));
     detail.appendChild(sides);
 
     if (session.webSocket) {
@@ -1061,7 +1310,7 @@
   function side(title, version, firstLine, message) {
     var section = el('section', 'sv-side');
     section.appendChild(el('h3', '', title));
-    section.appendChild(el('p', 'sv-first-line', firstLine + ' (' + version + ')'));
+    section.appendChild(el('p', 'sv-first-line', firstLine + (version ? ' (' + version + ')' : '')));
 
     var table = el('table', 'sv-headers');
     message.headers.forEach(function (h) {
@@ -1071,11 +1320,11 @@
       table.appendChild(tr);
     });
     if (message.headers.length) section.appendChild(table);
-    else section.appendChild(el('p', 'sv-note', 'No headers.'));
+    else section.appendChild(el('p', 'sv-note', message.noHeaders || 'No headers.'));
 
     var bytes = message.decoded || message.body;
     if (!bytes.length) {
-      section.appendChild(el('p', 'sv-note', message.missing ? 'The body isn\'t included in this HAR file.' : 'No body.'));
+      section.appendChild(el('p', 'sv-note', message.noBody || (message.missing ? 'The body isn\'t included in this HAR file.' : 'No body.')));
       return section;
     }
 
@@ -1117,12 +1366,12 @@
         try { text = JSON.stringify(JSON.parse(text), null, 2); } catch (e) { /* show as sent */ }
       }
       section.appendChild(el('pre', 'sv-body', text));
-      if (bytes.length > MAX_TEXT_SHOWN) section.appendChild(el('p', 'sv-note', 'Only the first 2 MB is shown. The downloaded HAR has all of it.'));
+      if (bytes.length > MAX_TEXT_SHOWN) section.appendChild(el('p', 'sv-note', state.netLog ? 'Only the first 2 MB is shown. Save the body to see all of it.' : 'Only the first 2 MB is shown. The downloaded HAR has all of it.'));
       return section;
     }
 
     section.appendChild(el('pre', 'sv-body hex', hexDump(bytes)));
-    if (bytes.length > MAX_HEX_SHOWN) section.appendChild(el('p', 'sv-note', 'Only the first 64 KB is shown. The downloaded HAR has all of it.'));
+    if (bytes.length > MAX_HEX_SHOWN) section.appendChild(el('p', 'sv-note', state.netLog ? 'Only the first 64 KB is shown. Save the body to see all of it.' : 'Only the first 64 KB is shown. The downloaded HAR has all of it.'));
     return section;
   }
 

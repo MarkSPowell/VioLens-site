@@ -1,8 +1,8 @@
 ---
 layout: default
-title: SAZ and HAR viewer
-seo_title: "SAZ and HAR Viewer Online: Open, Convert SAZ to HAR, Clean HAR"
-description: Open Fiddler SAZ or HAR files in your browser, convert SAZ to HAR, and remove cookies before sharing. Free, and your file is never uploaded.
+title: SAZ, HAR and NetLog viewer
+seo_title: "SAZ, HAR and NetLog Viewer Online: Convert SAZ, Clean HAR"
+description: Open SAZ, HAR and Chrome or Edge NetLog files in your browser. Convert SAZ to HAR or remove HAR cookies. Free, and nothing is uploaded.
 faq:
   - q: Is my file uploaded anywhere?
     a: |
@@ -13,6 +13,15 @@ faq:
   - q: What is a HAR file?
     a: |
       A `.har` (HTTP Archive) file is a JSON record of web requests and responses. Browser developer tools can export one, and support teams often ask for it. Open it here to see each request, its headers, and any bodies the file includes. Some HAR files leave bodies out.
+  - q: How do I open a Chrome or Edge net-export log?
+    a: |
+      Open the `.json` or `.jsonl` file saved by `chrome://net-export` or `edge://net-export` here. The page lists the URL requests, with their headers, redirects and network errors where the log has them. It doesn't show DNS, socket or other low-level events. For those, use Chromium's [NetLog viewer](https://netlog-viewer.appspot.com/).
+  - q: Why are bodies missing from my NetLog?
+    a: |
+      A NetLog only has response bodies if it was captured with **Include raw bytes** turned on, which also records cookies and sign-in details. This page doesn't show request bodies from a NetLog. Requests answered from the browser's cache may have no status or headers.
+  - q: Can I clean a NetLog or convert it to HAR here?
+    a: |
+      No. Sensitive data can appear in many places in a NetLog, so treat a log captured with cookies or raw bytes as private.
   - q: How do I remove cookies from a HAR file?
     a: |
       Open the `.har` file here, tick **Remove cookies and sign-in headers**, and click **Download cleaned HAR**. You get a new file, and your original isn't changed. Only the sessions that match the filter are included. Read the next answer before you share it.
@@ -24,24 +33,25 @@ faq:
       Check it first. A capture can hold passwords, session cookies and personal data. Tick **Remove cookies and sign-in headers** before you download to blank the `Cookie`, `Set-Cookie`, `Authorization` and common API key and token headers. It doesn't change URLs, bodies, comments, WebSocket messages, other headers or other fields in the file, so filter out sessions you don't need and look through the rest.
   - q: Why won't my file open?
     a: |
-      HAR files must be valid JSON and no bigger than 256 MB. For SAZ files, the viewer can't open password-protected SAZ files, so save it again from Fiddler without a password. Files that add up to more than 1 GB when unzipped are too big for a browser tab. If your browser can't decompress a body (not every browser supports Brotli or zstd yet), that body is shown as it was saved.
+      HAR files must be valid JSON. HAR and NetLog files can be no bigger than 256 MB. A NetLog that was cut short can often still be partly read. For SAZ files, the viewer can't open password-protected SAZ files, so save it again from Fiddler without a password. Files that add up to more than 1 GB when unzipped are too big for a browser tab. If your browser can't decompress a body (not every browser supports Brotli or zstd yet), that body is shown as it was saved.
   - q: Can I convert HAR to SAZ too?
     a: |
       You can view a HAR file here, but this page can't save it as SAZ. The [VioLens app](/download/) can: choose **File > Import HAR**, then **File > Save SAZ**. It's free for any use, on Windows, Mac and Linux.
 ---
 <article class="wrap tool-page" id="sv">
-  <h1>Open SAZ and HAR files in your browser</h1>
-  <p class="lede">Look inside a Fiddler <code>.saz</code> session archive or a <code>.har</code> file, convert SAZ to HAR, or remove cookies before you share, without installing anything. This page reads the file on your computer. It isn't uploaded anywhere.</p>
+  <h1>Open SAZ, HAR and NetLog files in your browser</h1>
+  <p class="lede">Look inside a Fiddler <code>.saz</code> session archive, a <code>.har</code> file or a Chrome or Edge net-export log, without installing anything. You can also convert SAZ to HAR, or remove cookies from a HAR before you share it. This page reads the file on your computer. It isn't uploaded anywhere.</p>
 
   <div class="sv-drop" id="sv-drop">
-    <p class="sv-drop-hint">Drop a <code>.saz</code> or <code>.har</code> file anywhere on this page, or</p>
-    <label class="button primary sv-pick">Choose a .saz or .har file<input type="file" id="sv-file" accept=".saz,.har,application/zip"></label>
+    <p class="sv-drop-hint">Drop a SAZ, HAR or NetLog file anywhere on this page, or</p>
+    <label class="button primary sv-pick">Choose a file<input type="file" id="sv-file" accept=".saz,.har,.json,.jsonl,application/zip"></label>
     <p class="sv-sample">No file handy? <button type="button" class="sv-link" id="sv-sample" data-src="{{ '/assets/sample.saz' | relative_url }}">Try a sample</button></p>
     <p class="sv-status" id="sv-status" role="status" aria-live="polite"></p>
     <noscript><p class="sv-status">The viewer needs JavaScript. Or <a href="{{ '/download/' | relative_url }}">download VioLens</a> to open SAZ and HAR files on your computer.</p></noscript>
   </div>
 
   <section class="sv-results" id="sv-results" hidden>
+    <div class="sv-warning" id="sv-warning" hidden></div>
     <div class="sv-toolbar">
       <input type="search" id="sv-filter" placeholder="Filter by URL, method, status or type" aria-label="Filter sessions">
       <span class="sv-count" id="sv-count"></span>
@@ -63,7 +73,7 @@ faq:
 
   <section class="sv-more">
     <h2>Need more than a quick look?</h2>
-    <p>The <a href="{{ '/download/' | relative_url }}">VioLens app</a> opens the same files and lets you search inside bodies, compare two sessions side by side, replay and edit requests, and capture new traffic. It's an open source alternative to Fiddler Classic, free for any use, for Windows, Mac and Linux.</p>
+    <p>The <a href="{{ '/download/' | relative_url }}">VioLens app</a> opens SAZ files and imports HAR files, and lets you search inside bodies, compare two sessions side by side, replay and edit requests, and capture new traffic. It's an open source alternative to Fiddler Classic, free for any use, for Windows, Mac and Linux.</p>
     <div class="buttons">
       <a class="button primary" href="{{ '/download/' | relative_url }}">Download VioLens</a>
       <a class="button" href="{{ '/how-to/open-saz-files/' | relative_url }}">How to open SAZ files in VioLens</a>
@@ -77,7 +87,7 @@ faq:
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "VioLens SAZ and HAR viewer",
+  "name": "VioLens SAZ, HAR and NetLog viewer",
   "url": "{{ page.url | absolute_url }}",
   "description": {{ page.description | jsonify }},
   "applicationCategory": "DeveloperApplication",

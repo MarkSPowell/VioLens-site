@@ -239,6 +239,9 @@ code, pre, kbd { font-family: var(--mono); font-size: 0.9em; }
 .sv-table th[aria-sort="ascending"] .sv-sort::after { content: " \2191"; }
 .sv-table th[aria-sort="descending"] .sv-sort::after { content: " \2193"; }
 .sv-table tbody tr.empty { cursor: default; }
+.sv-warning { margin: 0 0 12px; }
+/* These set display, which would otherwise override the hidden attribute. */
+.sv-redact[hidden], .sv-toolbar .button[hidden] { display: none; }
 .sv-table tbody tr.empty td { color: var(--muted); font-family: var(--font); }
 .sv-toolbar { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin-bottom: 12px; }
 .sv-toolbar input[type="search"] { flex: 1 1 260px; min-width: 0; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-sunken); color: var(--text); font: 15px var(--font); }
