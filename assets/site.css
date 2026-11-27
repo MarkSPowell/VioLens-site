@@ -240,6 +240,10 @@ code, pre, kbd { font-family: var(--mono); font-size: 0.9em; }
 .sv-table th[aria-sort="descending"] .sv-sort::after { content: " \2193"; }
 .sv-table tbody tr.empty { cursor: default; }
 .sv-warning { margin: 0 0 12px; }
+.sv-scan { margin: 0 0 14px; }
+.sv-scan[hidden], #sv-download-note:empty { display: none; }
+.sv-findings { max-height: 300px; overflow: auto; margin: 8px 0 0; padding: 8px 14px 8px 30px; background: var(--bg-raised); border: 1px solid var(--border); border-radius: 8px; font-size: 14px; overflow-wrap: anywhere; }
+.sv-findings li { margin: 4px 0; }
 /* These set display, which would otherwise override the hidden attribute. */
 .sv-redact[hidden], .sv-toolbar .button[hidden] { display: none; }
 .sv-table tbody tr.empty td { color: var(--muted); font-family: var(--font); }

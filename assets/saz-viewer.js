@@ -1,6 +1,6 @@
 /* VioLens SAZ, HAR and NetLog viewer: opens a Fiddler .saz, a .har or a
    Chromium net-export file in the browser. SAZ and HAR files can be saved as
-   HAR. Everything happens on the visitor's computer: the file is read
+   HAR and checked for secrets, and HAR files saved as SAZ. Everything happens on the visitor's computer: the file is read
    with the File API, unzipped and decompressed with the browser's own
    DecompressionStream, and nothing is sent anywhere. The parsing follows the
    VioLens app's SazReader and HarWriter (Violens.ProxyCore/Sessions).
@@ -983,8 +983,354 @@
     };
   }
 
+  // ------------------------------------------------------------- writing SAZ
+
+  // The layout follows the app's SazWriter: raw/<n>_c.txt, _s.txt and _m.xml
+  // for each session, plus [Content_Types].xml and an _index.htm page.
+
+  // The app won't read a start line or header line longer than this.
+  var APP_LINE_LIMIT = 16 * 1024;
+
+  // Line breaks would start a new header or message, so they become spaces.
+  function oneLine(text) { return String(text).replace(/[\r\n\0]+/g, ' '); }
+  function urlPart(text) { return String(text).replace(/[\0-\x20\x7f]/g, function (c) { return encodeURIComponent(c); }); }
+
+  function sazVersion(version) {
+    var v = String(version || '').toLowerCase();
+    if (v === 'h2' || v === 'http/2' || v === 'http/2.0') return 'HTTP/2.0';
+    if (v === 'h3' || v === 'http/3' || v === 'http/3.0') return 'HTTP/3';
+    return /^http\/\d\.\d$/.test(v) ? v.toUpperCase() : 'HTTP/1.1';
+  }
+
+  // Bodies in a HAR are already decoded, so the headers that described how
+  // they were sent are replaced with the body's real length.
+  function sazMessage(startLine, headers, body, frameEmpty) {
+    var lines = [startLine];
+    headers.forEach(function (h) {
+      var name = oneLine(h.name).replace(/[:\s]/g, '');
+      if (!name || h.name.charAt(0) === ':' || /^(content-length|content-encoding|transfer-encoding)$/i.test(name)) return;
+      lines.push(name + ': ' + oneLine(h.value));
+    });
+    if (body.length || frameEmpty) lines.push('Content-Length: ' + body.length);
+    var encoder = new TextEncoder();
+    var long = lines.some(function (line) { return encoder.encode(line).length >= APP_LINE_LIMIT; });
+    var head = encoder.encode(lines.join('\r\n') + '\r\n\r\n');
+    return { bytes: concat([head, body], head.length + body.length), long: long };
+  }
+
+  function xmlText(text) {
+    return String(text)
+      .replace(/[^\t\n\r\x20-퟿-�\u{10000}-\u{10FFFF}]/gu, '')
+      .replace(/[&<>"\t\n\r]/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\t': '&#x9;', '\n': '&#xA;', '\r': '&#xD;' }[c];
+      });
+  }
+
+  function sazMetadata(session, entry) {
+    var t = isObject(entry.timings) ? entry.timings : {};
+    function ms(name) { return typeof t[name] === 'number' && t[name] > 0 ? t[name] : 0; }
+    // HAR's connect time includes the TLS handshake.
+    var dns = ms('dns'), ssl = ms('ssl'), connect = Math.max(0, ms('connect') - ssl);
+    var start = session.startedAt;
+    var timers = '';
+    if (start !== null) {
+      var blockedEnd = start + ms('blocked');
+      var connected = blockedEnd + dns + connect + ssl;
+      var sent = connected + ms('send');
+      var firstByte = sent + ms('wait');
+      var done = firstByte + ms('receive');
+      // A HAR with only a total time still keeps it.
+      if (done === start && session.duration > 0) done = start + session.duration;
+      var at = function (when) { var d = new Date(when); return isNaN(d.getTime()) ? '' : d.toISOString(); };
+      timers = [['ClientConnected', at(start)], ['ClientBeginRequest', at(start)], ['GotRequestHeaders', at(start)],
+        ['ClientDoneRequest', at(blockedEnd)], ['GatewayTime', 0], ['DNSTime', Math.round(dns)],
+        ['TCPConnectTime', Math.round(connect)], ['HTTPSHandshakeTime', Math.round(ssl)], ['ServerConnected', at(connected)],
+        ['FiddlerBeginRequest', at(connected)], ['ServerGotRequest', at(sent)], ['ServerBeginResponse', at(firstByte)],
+        ['GotResponseHeaders', at(firstByte)], ['ServerDoneResponse', at(done)], ['ClientBeginResponse', at(firstByte)],
+        ['ClientDoneResponse', at(done)]].map(function (a) { return ' ' + a[0] + '="' + a[1] + '"'; }).join('');
+    }
+    var flags = session.flags['ui-comments']
+      ? '<SessionFlag N="ui-comments" V="' + xmlText(session.flags['ui-comments']) + '" />' : '';
+    return '<?xml version="1.0" encoding="utf-8"?>\n<Session>\n  <SessionTimers' + timers + ' />\n  <SessionFlags>' +
+      flags + '</SessionFlags>\n</Session>';
+  }
+
+  var crcTable = null;
+  function crc32(bytes) {
+    if (!crcTable) {
+      crcTable = new Int32Array(256);
+      for (var n = 0; n < 256; n++) {
+        var c = n;
+        for (var k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+        crcTable[n] = c;
+      }
+    }
+    var crc = -1;
+    for (var i = 0; i < bytes.length; i++) crc = crcTable[(crc ^ bytes[i]) & 255] ^ (crc >>> 8);
+    return (crc ^ -1) >>> 0;
+  }
+
+  async function deflate(bytes) {
+    try {
+      var stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+      return new Uint8Array(await new Response(stream).arrayBuffer());
+    } catch (e) { return null; }  // stored uncompressed instead
+  }
+
+  // A plain zip, without zip64: enough for anything a browser tab can hold.
+  async function writeZip(files) {
+    if (files.length > 65535) throw new SazError('Too many sessions for one SAZ file. Filter the list and save it in parts.');
+    var parts = [], directory = [], offset = 0;
+    function record(fields) {
+      var size = fields.reduce(function (n, f) { return n + f[0]; }, 0);
+      var out = new Uint8Array(size), view = new DataView(out.buffer), at = 0;
+      fields.forEach(function (f) {
+        if (f[0] === 2) view.setUint16(at, f[1], true); else view.setUint32(at, f[1], true);
+        at += f[0];
+      });
+      return out;
+    }
+    for (var i = 0; i < files.length; i++) {
+      var name = new TextEncoder().encode(files[i].name);
+      var data = files[i].data;
+      var packed = await deflate(data);
+      var method = packed && packed.length < data.length ? 8 : 0;
+      var body = method ? packed : data;
+      // Version, UTF-8 names, method, the date 1980-01-01, CRC and sizes.
+      var common = [[2, 20], [2, 0x0800], [2, method], [2, 0], [2, 33], [4, crc32(data)], [4, body.length], [4, data.length], [2, name.length], [2, 0]];
+      var local = record([[4, 0x04034b50]].concat(common));
+      directory.push(record([[4, 0x02014b50], [2, 20]].concat(common, [[2, 0], [2, 0], [2, 0], [4, 0], [4, offset]])), name);
+      parts.push(local, name, body);
+      offset += local.length + name.length + body.length;
+    }
+    var directorySize = directory.reduce(function (n, p) { return n + p.length; }, 0);
+    if (offset + directorySize > 0xffffffff) throw new SazError('Too big for one SAZ file. Filter the list and save it in parts.');
+    var end = record([[4, 0x06054b50], [2, 0], [2, 0], [2, files.length], [2, files.length], [4, directorySize], [4, offset], [2, 0]]);
+    var all = parts.concat(directory, [end]);
+    return concat(all, offset + directorySize + end.length);
+  }
+
+  // Turns HAR entries into a SAZ file. Also reports what SAZ output leaves
+  // out, so the page can say so.
+  async function buildSaz(entries) {
+    var files = [], rows = [], missingBodies = 0, longLines = 0, webSockets = 0;
+    var encoder = new TextEncoder();
+    function add(name, data) { files.push({ name: name, data: typeof data === 'string' ? encoder.encode(data) : data }); }
+    add('[Content_Types].xml', '<?xml version="1.0" encoding="utf-8"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">\n' +
+      '  <Default Extension="htm" ContentType="text/html" />\n  <Default Extension="txt" ContentType="text/plain" />\n' +
+      '  <Default Extension="xml" ContentType="application/xml" />\n</Types>');
+
+    entries.forEach(function (entry, i) {
+      var number = i + 1;
+      var session = harSession(entry, number);
+      var req = session.request, res = session.response;
+      var method = urlPart(session.method) || 'GET';
+      // The full URL, so the scheme survives. WebSockets began as HTTP requests.
+      var target = urlPart(session.url.replace(/^ws(s?):/i, 'http$1:').split('#')[0]);
+      var requestHeaders = req.headers.slice();
+      var authority = /^[a-z][a-z0-9+.-]*:\/\/(?:[^\/?#@]*@)?([^\/?#]*)/i.exec(session.url);
+      if (method.toUpperCase() === 'CONNECT' && authority) target = authority[1];
+      if (header(requestHeaders, 'Host') === null && authority) requestHeaders.unshift({ name: 'Host', value: authority[1] });
+
+      var frameEmpty = !((res.status >= 100 && res.status < 200) || res.status === 204 || res.status === 304);
+      var request = sazMessage(method + ' ' + target + ' ' + sazVersion(req.version), requestHeaders, req.body, false);
+      var response = sazMessage(sazVersion(res.version) + ' ' + res.status + (res.statusText ? ' ' + oneLine(res.statusText) : ''),
+        res.headers, res.body, frameEmpty);
+      if (req.missing || res.missing) missingBodies++;
+      if (request.long || response.long) longLines++;
+      if (session.webSocket) webSockets++;
+
+      add('raw/' + number + '_c.txt', request.bytes);
+      add('raw/' + number + '_s.txt', response.bytes);
+      add('raw/' + number + '_m.xml', sazMetadata(session, entry));
+      rows.push('<tr><td><a href="raw/' + number + '_c.txt">C</a> <a href="raw/' + number + '_s.txt">S</a> <a href="raw/' + number +
+        '_m.xml">M</a></td><td>' + number + '</td><td>' + res.status + '</td><td>' + xmlText(session.method) + '</td><td>' +
+        xmlText(session.url) + '</td></tr>');
+    });
+
+    // Everything from the traffic is escaped, so it can't add script here.
+    files.splice(1, 0, { name: '_index.htm', data: encoder.encode('<!doctype html>\n<html><head><meta charset="utf-8"><title>Sessions</title></head><body>\n<table>\n' +
+      '<tr><th></th><th>#</th><th>Result</th><th>Method</th><th>URL</th></tr>\n' + rows.join('\n') + '\n</table>\n</body></html>\n') });
+
+    return { bytes: await writeZip(files), count: entries.length, missingBodies: missingBodies, longLines: longLines, webSockets: webSockets };
+  }
+
+  // ------------------------------------------------------ looking for secrets
+
+  var MAX_FINDINGS = 500;
+
+  // Values with a recognizable shape. Each starts only at the start of a run
+  // of token characters, which keeps the search fast on long strings.
+  var SECRET_PATTERNS = [
+    ['JSON Web Token', /(?<![A-Za-z0-9_-])eyJ[A-Za-z0-9_-]{4,}\.eyJ[A-Za-z0-9_-]{2,}\.[A-Za-z0-9_-]*/g],
+    ['AWS access key ID', /(?<![A-Z0-9])(?:AKIA|ASIA)[A-Z0-9]{16}(?![A-Z0-9])/g],
+    ['GitHub token', /(?<![A-Za-z0-9_])(?:gh[pousr]_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{40,})/g],
+    ['Google API key', /(?<![A-Za-z0-9_-])AIza[A-Za-z0-9_-]{35}/g],
+    ['Slack token', /(?<![A-Za-z0-9-])xox[abprs]-[A-Za-z0-9-]{10,}/g],
+    ['Stripe live key', /(?<![A-Za-z0-9_])[sr]k_live_[A-Za-z0-9]{16,}/g],
+    ['Private key', /-----BEGIN (?:[A-Z]+ )?PRIVATE KEY-----/g],
+    ['Bearer token', /(?<![A-Za-z0-9])Bearer +[A-Za-z0-9._~+\/=-]{16,}/g],
+    ['Password in a URL', /:\/\/[^\/\s:@"'?#]{1,256}:[^\/\s@"'?#]{1,256}@/g]
+  ];
+
+  // Names that usually hold a secret, compared without case or punctuation.
+  function secretName(name) {
+    var n = String(name).toLowerCase().replace(/[^a-z0-9]/g, '');
+    return /(password|passwd|passphrase|secret|apikey|accesstoken|refreshtoken|idtoken|authtoken|sessiontoken|sessionid|sessionkey|privatekey|clientassertion|samlresponse|codeverifier|credential)/.test(n) ||
+      /^(pwd|pass|token|sid|sig|signature|auth|jwt|assertion|jsessionid|phpsessid|xamzsignature|xgoogsignature)$/.test(n);
+  }
+
+  function holdsValue(value) {
+    return typeof value === 'string' && value.length >= 3 && !/^(\[removed\]|null|true|false|undefined)$/i.test(value);
+  }
+
+  // Searches a HAR as it would be downloaded. Findings never include the
+  // whole value. numbers[i] is the session number of entry i.
+  async function scanHar(har, numbers) {
+    var findings = [], seen = new Set(), unsearched = 0, truncated = false;
+
+    for (var i = 0; i < har.log.entries.length; i++) {
+      scanEntry(har.log.entries[i], numbers[i]);
+      if (i % 20 === 19) await new Promise(function (resolve) { setTimeout(resolve, 0); });
+    }
+    // Page titles and other fields outside the entries.
+    Object.keys(har.log).forEach(function (key) { if (key !== 'entries') walk(har.log[key], null, 'File field "' + key + '"', 0); });
+    return { findings: findings, truncated: truncated, unsearched: unsearched };
+
+    function report(number, where, kind, value, preview) {
+      var key = number + '\n' + value;
+      if (seen.has(key)) return;
+      if (findings.length >= MAX_FINDINGS) { truncated = true; return; }
+      seen.add(key);
+      findings.push({ number: number, where: where, kind: kind,
+        preview: (preview ? value.slice(0, 4) + '… ' : '') + '(' + value.length + ' characters)' });
+    }
+
+    function named(number, where, name, value) {
+      if (secretName(name) && holdsValue(value)) report(number, where, 'Value named "' + String(name).slice(0, 60) + '"', value, false);
+    }
+
+    function patterns(number, where, text) {
+      SECRET_PATTERNS.forEach(function (p) {
+        var re = p[1], match;
+        re.lastIndex = 0;
+        while (!truncated && (match = re.exec(text))) {
+          // Show none of a password or private key, not even its start.
+          report(number, where, p[0], match[0], p[0] !== 'Password in a URL' && p[0] !== 'Private key');
+        }
+      });
+    }
+
+    // name=value pairs, as in a query string, fragment or form body.
+    function pairs(number, where, text) {
+      text.split(/[&#]/).forEach(function (pair) {
+        var equals = pair.indexOf('=');
+        if (equals > 0) {
+          var value = unescapeQuery(pair.slice(equals + 1));
+          named(number, where, unescapeQuery(pair.slice(0, equals)), value);
+          if (value !== pair.slice(equals + 1)) patterns(number, where, value);
+        }
+      });
+    }
+
+    function text(number, where, value, type) {
+      if (/^\s*[\[{]/.test(value)) {
+        var parsed;
+        try { parsed = JSON.parse(value); } catch (e) { parsed = undefined; }
+        // Named fields first, so a finding says which field it was in.
+        if (parsed !== undefined) walk(parsed, number, where, 0);
+      }
+      if (/x-www-form-urlencoded/i.test(type || '')) pairs(number, where, value);
+      patterns(number, where, value);
+    }
+
+    // Any value, looking at the names of its fields too.
+    function walk(value, number, where, depth) {
+      if (depth > 40) { unsearched++; return; }
+      if (typeof value === 'string') {
+        if (/^(https?|wss?):\/\//i.test(value) && /[?#]/.test(value)) pairs(number, where, value.replace(/^[^?#]*[?#]/, ''));
+        patterns(number, where, value);
+      } else if (Array.isArray(value)) {
+        value.forEach(function (item) { walk(item, number, where, depth + 1); });
+      } else if (isObject(value)) {
+        if (typeof value.name === 'string' && typeof value.value === 'string') named(number, where, value.name, value.value);
+        Object.keys(value).forEach(function (key) {
+          named(number, where, key, value[key]);
+          walk(value[key], number, where, depth + 1);
+        });
+      }
+    }
+
+    // A body, which may be base64. Binary bodies can't be searched.
+    function body(number, where, holder, type) {
+      if (typeof holder.text !== 'string' || !holder.text) return;
+      if (String(holder.encoding).toLowerCase() !== 'base64') { text(number, where, holder.text, type); return; }
+      var decoded;
+      try {
+        var binary = atob(holder.text);
+        var bytes = new Uint8Array(binary.length);
+        for (var j = 0; j < binary.length; j++) bytes[j] = binary.charCodeAt(j);
+        decoded = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+      } catch (e) { unsearched++; return; }
+      if (decoded.indexOf('\0') >= 0) unsearched++;
+      else text(number, where, decoded, type);
+    }
+
+    function others(object, skip, number, where) {
+      Object.keys(object).forEach(function (key) {
+        if (skip.indexOf(key) < 0) {
+          named(number, where, key, object[key]);
+          walk(object[key], number, where + ' "' + key + '"', 0);
+        }
+      });
+    }
+
+    function scanEntry(entry, number) {
+      var req = isObject(entry.request) ? entry.request : {};
+      var res = isObject(entry.response) ? entry.response : {};
+      [[req, 'Request'], [res, 'Response']].forEach(function (side) {
+        var headers = harHeaders(side[0].headers);
+        headers.forEach(function (h) {
+          var where = side[1] + ' header "' + h.name.slice(0, 60) + '"';
+          if (SECRET_HEADERS.test(h.name)) {
+            if (holdsValue(h.value)) report(number, where, 'Cookie or sign-in header', h.value, false);
+          } else {
+            named(number, where, h.name, h.value);
+            walk(h.value, number, where, 0);
+          }
+        });
+        // Cookie lists repeat the headers; they're only news without them.
+        if (!headers.some(function (h) { return /^(cookie|set-cookie)$/i.test(h.name); })) {
+          list(side[0].cookies).forEach(function (c) {
+            if (holdsValue(c.value)) report(number, side[1] + ' cookie list', 'Cookie', c.value, false);
+          });
+        }
+      });
+
+      if (typeof req.url === 'string') walk(req.url, number, 'Request URL', 0);
+      if (typeof res.redirectURL === 'string') walk(res.redirectURL, number, 'Redirect URL', 0);
+      walk(req.queryString, number, 'Query string', 0);
+      if (isObject(req.postData)) {
+        walk(req.postData.params, number, 'Request form field', 0);
+        body(number, 'Request body', req.postData, req.postData.mimeType);
+        others(req.postData, ['text', 'encoding', 'mimeType', 'params'], number, 'Request body field');
+      }
+      if (isObject(res.content)) {
+        body(number, 'Response body', res.content, res.content.mimeType);
+        others(res.content, ['text', 'encoding', 'mimeType', 'size', 'compression'], number, 'Response body field');
+      }
+      list(entry._webSocketMessages).forEach(function (m) {
+        if (typeof m.data === 'string') text(number, 'WebSocket message', m.data, '');
+      });
+      others(req, ['method', 'url', 'headers', 'cookies', 'queryString', 'postData'], number, 'Request field');
+      others(res, ['headers', 'cookies', 'content', 'redirectURL'], number, 'Response field');
+      others(entry, ['request', 'response', '_webSocketMessages', 'startedDateTime', 'timings'], number, 'Entry field');
+    }
+  }
+
   var core = {
-    readNetLog: readNetLog, readHar: readHar, copyHar: copyHar, readSaz: readSaz, buildHar: buildHar, parseMessage: parseMessage, dechunk: dechunk,
+    buildSaz: buildSaz, scanHar: scanHar, copyHar: copyHar,
+    readNetLog: readNetLog, readHar: readHar, readSaz: readSaz, buildHar: buildHar, parseMessage: parseMessage, dechunk: dechunk,
     readMetadata: readMetadata, readTimings: readTimings, isText: isText, SazError: SazError
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = core;
@@ -1046,6 +1392,11 @@
   var redact = document.getElementById('sv-redact');
   var sample = document.getElementById('sv-sample');
   var warning = document.getElementById('sv-warning');
+  var sazButton = document.getElementById('sv-saz');
+  var downloadNote = document.getElementById('sv-download-note');
+  var scanArea = document.getElementById('sv-scan-area');
+  var scanButton = document.getElementById('sv-scan');
+  var scanResults = document.getElementById('sv-scan-results');
   var redactLabel = redact.parentNode;
   var sortButtons = Array.prototype.slice.call(document.querySelectorAll('.sv-sort'));
 
@@ -1098,6 +1449,7 @@
     status.textContent = 'Reading ' + file.name + '…';
     results.hidden = true;
     clearDetail();
+    clearScan();
     try {
       var kind = await fileKind(file);
       if (kind === 'har' && file.size > MAX_HAR_BYTES) throw new SazError('This HAR file is over 256 MB, which is too big to open here.');
@@ -1114,7 +1466,9 @@
       state.log = result.log || null;
       state.netLog = !!result.netLog;
       // NetLog files can be viewed, but not saved as HAR.
-      harButton.hidden = redactLabel.hidden = state.netLog;
+      harButton.hidden = redactLabel.hidden = scanArea.hidden = state.netLog;
+      // Only a HAR can be saved as SAZ.
+      sazButton.hidden = !state.log;
       showWarning(result);
       state.sort = 'number';
       state.direction = 1;
@@ -1162,8 +1516,10 @@
       (result.sensitive ? '' : ' Even without cookies, a log can show which sites were visited.')));
   }
 
-  filter.addEventListener('input', render);
-  redact.addEventListener('change', render);
+  // Results describe one download, so changing what's in it clears them.
+  function downloadChanged() { clearScan(); render(); }
+  filter.addEventListener('input', downloadChanged);
+  redact.addEventListener('change', downloadChanged);
 
   sortButtons.forEach(function (button) {
     button.addEventListener('click', function () {
@@ -1227,7 +1583,9 @@
       : state.shown.length + ' of ' + state.sessions.length + noun;
     if (limit < state.shown.length) count.textContent += ' (the first 5,000 are listed; filter to find the rest)';
     harButton.textContent = (state.log && redact.checked ? 'Download cleaned HAR (' : 'Download HAR (') + exported + ')';
-    harButton.disabled = exported === 0;
+    harButton.disabled = scanButton.disabled = exported === 0;
+    sazButton.textContent = (redact.checked ? 'Download cleaned SAZ (' : 'Download SAZ (') + exported + ')';
+    sazButton.disabled = exported === 0;
   }
 
   function row(session) {
@@ -1406,11 +1764,97 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
   }
 
-  harButton.addEventListener('click', function () {
-    // The HAR keeps capture order, whatever order the table is in.
-    var inOrder = state.shown.slice().sort(function (a, b) { return a.number - b.number; });
+  // Downloads keep capture order, whatever order the table is in.
+  function inCaptureOrder() { return state.shown.slice().sort(function (a, b) { return a.number - b.number; }); }
+
+  function harForDownload(sessions) {
     var options = { redact: redact.checked };
-    var har = state.log ? copyHar(state.log, inOrder, options) : buildHar(inOrder, options);
+    return state.log ? copyHar(state.log, sessions, options) : buildHar(sessions, options);
+  }
+
+  sazButton.addEventListener('click', async function () {
+    var opening = state.opening;
+    var name = state.fileName + (redact.checked ? '-cleaned' : '') + '.saz';
+    var entries = harForDownload(inCaptureOrder()).log.entries;
+    sazButton.disabled = true;
+    downloadNote.textContent = 'Making the SAZ file\u2026';
+    try {
+      var saz = await buildSaz(entries);
+      if (opening !== state.opening) return;
+      download(new Blob([saz.bytes], { type: 'application/octet-stream' }), name);
+      var notes = ['Saved ' + saz.count + (saz.count === 1 ? ' session' : ' sessions') + ' to ' + name + '.'];
+      if (saz.missingBodies) notes.push('Sessions with a body the HAR didn\'t include: ' + saz.missingBodies + '.');
+      if (saz.webSockets) notes.push('WebSocket messages aren\'t saved in the SAZ (sessions affected: ' + saz.webSockets + ').');
+      if (saz.longLines) notes.push('Sessions with a line of 16 KB or more, which the VioLens app may skip: ' + saz.longLines + '.');
+      downloadNote.textContent = notes.join(' ');
+    } catch (e) {
+      if (opening === state.opening) downloadNote.textContent = 'The SAZ file couldn\'t be made: ' + (e && e.message ? e.message : e);
+    }
+    if (opening === state.opening) sazButton.disabled = false;
+  });
+
+  var scanRun = 0;
+  function clearScan() {
+    scanRun++;
+    scanResults.textContent = '';
+    downloadNote.textContent = '';
+  }
+
+  scanButton.addEventListener('click', async function () {
+    clearScan();
+    var run = scanRun;
+    var sessions = inCaptureOrder().filter(function (s) { return !s.isConnect; });
+    scanResults.appendChild(el('p', 'sv-note', 'Checking\u2026'));
+    try {
+      var result = await scanHar(harForDownload(sessions), sessions.map(function (s) { return s.number; }));
+      if (run === scanRun) showFindings(result);
+    } catch (e) {
+      if (run !== scanRun) return;
+      scanResults.textContent = '';
+      scanResults.appendChild(el('p', 'sv-note warn', 'The check didn\'t finish, so don\'t rely on it: ' + (e && e.message ? e.message : e)));
+    }
+  });
+
+  function showFindings(result) {
+    scanResults.textContent = '';
+    var n = result.findings.length;
+    scanResults.appendChild(el('p', n ? 'sv-note warn' : 'sv-note', (n
+      ? (result.truncated ? 'More than ' : '') + n + ' possible secret' + (n === 1 ? '' : 's') + ' in what you would download. Some may be harmless.'
+      : 'This check found no likely secrets in what you would download.') +
+      ' It can miss secrets and personal data, so it can\'t show that a file is safe to share.'));
+    if (!state.log) scanResults.appendChild(el('p', 'sv-note', 'Only the HAR download was checked, not the SAZ file itself, which can hold more, such as WebSocket messages and CONNECT sessions.'));
+    if (result.unsearched) scanResults.appendChild(el('p', 'sv-note', 'Parts that couldn\'t be searched, such as binary or compressed bodies: ' + result.unsearched + '.'));
+    if (!n) return;
+    var items = el('ul', 'sv-findings');
+    result.findings.forEach(function (f) {
+      var item = el('li');
+      if (f.number !== null) {
+        var open = el('button', 'sv-link', 'Session #' + f.number);
+        open.type = 'button';
+        open.addEventListener('click', function () { showSession(f.number); });
+        item.appendChild(open);
+      }
+      item.appendChild(document.createTextNode((f.number !== null ? ' \u00b7 ' : '') + f.where + ' \u00b7 ' + f.kind + ' ' + f.preview));
+      items.appendChild(item);
+    });
+    scanResults.appendChild(items);
+  }
+
+  function showSession(number) {
+    for (var i = 0; i < state.shown.length && i < tbody.children.length; i++) {
+      if (state.shown[i].number === number) {
+        var tr = tbody.children[i];
+        tr.focus();
+        select(state.shown[i], tr);
+        detail.scrollIntoView({ block: 'start' });
+        return;
+      }
+    }
+    downloadNote.textContent = 'Session #' + number + ' is past the 5,000 listed. Filter the list to find it (this clears the check).';
+  }
+
+  harButton.addEventListener('click', function () {
+    var har = harForDownload(inCaptureOrder());
     // A copy of a HAR gets its own name, so it isn't mistaken for the original.
     var suffix = !state.log ? '' : redact.checked ? '-cleaned' : '-copy';
     download(new Blob([JSON.stringify(har, null, 2)], { type: 'application/json' }), state.fileName + suffix + '.har');

@@ -1,8 +1,8 @@
 ---
 layout: default
 title: SAZ, HAR and NetLog viewer
-seo_title: "SAZ, HAR and NetLog Viewer Online: Convert SAZ, Clean HAR"
-description: Open SAZ, HAR and Chrome or Edge NetLog files in your browser. Convert SAZ to HAR or remove HAR cookies. Free, and nothing is uploaded.
+seo_title: "SAZ, HAR and NetLog Viewer: SAZ to HAR, HAR to SAZ"
+description: Open SAZ, HAR and NetLog files in your browser, convert between SAZ and HAR, and check for secrets before sharing. Free, with no upload.
 faq:
   - q: Is my file uploaded anywhere?
     a: |
@@ -24,23 +24,26 @@ faq:
       No. Sensitive data can appear in many places in a NetLog, so treat a log captured with cookies or raw bytes as private.
   - q: How do I remove cookies from a HAR file?
     a: |
-      Open the `.har` file here, tick **Remove cookies and sign-in headers**, and click **Download cleaned HAR**. You get a new file, and your original isn't changed. Only the sessions that match the filter are included. Read the next answer before you share it.
+      Open the `.har` file here, tick **Remove cookies and sign-in headers from downloads**, and click **Download cleaned HAR**. You get a new file, and your original isn't changed. Only the sessions that match the filter are included. Read the next answer before you share it.
+  - q: How does the check for leftover secrets work?
+    a: |
+      Open a SAZ or HAR file and click **Check for leftover secrets**. It searches what you would download as HAR, using the current filter and cleaning choice. A SAZ made here from a HAR holds no more of the capture than that. The check doesn't cover an original SAZ file as a whole: WebSocket messages and CONNECT sessions, for example, aren't in the HAR download. It looks for cookie and sign-in headers, some recognizable kinds of tokens and keys, and values with names such as `password` or `access_token`. Results show where each one is without showing the whole value. It runs in your browser and doesn't change the file. It can miss secrets, doesn't look for personal data in general, and can't search binary bodies, so finding nothing doesn't mean the file is safe.
   - q: How do I convert SAZ to HAR?
     a: |
       Open the `.saz` file here, type in the filter box if you only want some of the sessions, and click **Download HAR**. Bodies are decompressed, text is saved as text and anything else as base64, and timings and comments are kept. CONNECT tunnels are left out, as they are in browsers' HAR files.
   - q: Is it safe to send the HAR file to someone?
     a: |
-      Check it first. A capture can hold passwords, session cookies and personal data. Tick **Remove cookies and sign-in headers** before you download to blank the `Cookie`, `Set-Cookie`, `Authorization` and common API key and token headers. It doesn't change URLs, bodies, comments, WebSocket messages, other headers or other fields in the file, so filter out sessions you don't need and look through the rest.
+      Check it first. A capture can hold passwords, session cookies and personal data. Tick **Remove cookies and sign-in headers from downloads** before you download to blank the `Cookie`, `Set-Cookie`, `Authorization` and common API key and token headers. It doesn't change URLs, bodies, comments, WebSocket messages, other headers or other fields in the file, so filter out sessions you don't need, run **Check for leftover secrets** and look through the rest.
   - q: Why won't my file open?
     a: |
       HAR files must be valid JSON. HAR and NetLog files can be no bigger than 256 MB. A NetLog that was cut short can often still be partly read. For SAZ files, the viewer can't open password-protected SAZ files, so save it again from Fiddler without a password. Files that add up to more than 1 GB when unzipped are too big for a browser tab. If your browser can't decompress a body (not every browser supports Brotli or zstd yet), that body is shown as it was saved.
-  - q: Can I convert HAR to SAZ too?
+  - q: How do I convert HAR to SAZ?
     a: |
-      You can view a HAR file here, but this page can't save it as SAZ. The [VioLens app](/download/) can: choose **File > Import HAR**, then **File > Save SAZ**. It's free for any use, on Windows, Mac and Linux.
+      Open the `.har` file here and click **Download SAZ**. Only sessions that match the filter are included, and the cleaning checkbox applies too. Request and response headers, status codes, comments, timings and the bodies in the HAR are carried over. HAR bodies are already decompressed, so the headers describing compression and length are updated to match. SAZ can't hold everything in a HAR, and bodies the HAR left out stay missing. This converter also leaves out WebSocket messages, page details and extra fields, so keep your original HAR.
 ---
 <article class="wrap tool-page" id="sv">
   <h1>Open SAZ, HAR and NetLog files in your browser</h1>
-  <p class="lede">Look inside a Fiddler <code>.saz</code> session archive, a <code>.har</code> file or a Chrome or Edge net-export log, without installing anything. You can also convert SAZ to HAR, or remove cookies from a HAR before you share it. This page reads the file on your computer. It isn't uploaded anywhere.</p>
+  <p class="lede">Look inside a Fiddler <code>.saz</code> session archive, a <code>.har</code> file or a Chrome or Edge net-export log, without installing anything. You can also convert between SAZ and HAR, and check for secrets before you share. This page reads the file on your computer. It isn't uploaded anywhere.</p>
 
   <div class="sv-drop" id="sv-drop">
     <p class="sv-drop-hint">Drop a SAZ, HAR or NetLog file anywhere on this page, or</p>
@@ -57,10 +60,16 @@ faq:
       <span class="sv-count" id="sv-count"></span>
       <span class="buttons">
         <button type="button" class="button primary" id="sv-har">Download HAR</button>
+        <button type="button" class="button" id="sv-saz" hidden>Download SAZ</button>
         <button type="button" class="button" id="sv-another">Open another file</button>
       </span>
     </div>
-    <label class="sv-redact"><input type="checkbox" id="sv-redact"> Remove cookies and sign-in headers from the HAR. Tokens or personal data in URLs, bodies, comments and elsewhere are kept, so check the file before you share it.</label>
+    <label class="sv-redact"><input type="checkbox" id="sv-redact"> Remove cookies and sign-in headers from downloads. Tokens or personal data in URLs, bodies, comments and elsewhere are kept, so check the file before you share it.</label>
+    <p class="sv-note" id="sv-download-note" role="status"></p>
+    <div class="sv-scan" id="sv-scan-area">
+      <button type="button" class="button" id="sv-scan">Check for leftover secrets</button>
+      <div id="sv-scan-results" role="status"></div>
+    </div>
     <div class="sv-table-scroll">
       <table class="sv-table">
         <thead><tr><th><button type="button" class="sv-sort" data-sort="number">#</button></th><th><button type="button" class="sv-sort" data-sort="status">Result</button></th><th><button type="button" class="sv-sort" data-sort="method">Method</button></th><th><button type="button" class="sv-sort" data-sort="host">Host</button></th><th><button type="button" class="sv-sort" data-sort="url">URL</button></th><th><button type="button" class="sv-sort" data-sort="size">Body</button></th><th><button type="button" class="sv-sort" data-sort="type">Content-Type</button></th></tr></thead>
